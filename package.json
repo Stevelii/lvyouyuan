@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "setup": "npm install --prefix server && npm install --prefix website && npm install --prefix admin && npm install",
+    "server:bootstrap": "bash scripts/server-bootstrap.sh",
     "dev": "concurrently -n server,website,admin -c green,blue,magenta \"npm --prefix server run dev\" \"npm --prefix website run dev -- --host\" \"npm --prefix admin run dev -- --host\"",
     "dev:server": "npm --prefix server run dev",
     "dev:website": "npm --prefix website run dev -- --host",

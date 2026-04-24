@@ -26,6 +26,22 @@ npm run dev
 - 后台：[http://localhost:5174](http://localhost:5174)
 - API：[http://localhost:8507/api](http://localhost:8507/api)
 
+## 服务器一键启动
+
+在服务器项目根目录执行下面这一条即可：
+
+```bash
+npm run server:bootstrap
+```
+
+这条命令会自动完成：
+
+- 安装/校验依赖
+- 初始化 MySQL 数据库
+- 构建官网与后台静态文件
+- 用 PM2 启动或重启后端 API
+- 执行 `8507` 端口健康检查
+
 ## 单独启动
 
 ```bash
