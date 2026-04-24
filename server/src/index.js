@@ -4,7 +4,7 @@ import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypt
 import { databaseName, execute, query, queryOne } from './db.js'
 
 const app = express()
-const PORT = Number(process.env.PORT ?? 4000)
+const PORT = Number(process.env.PORT ?? 8507)
 const DEFAULT_PASSWORD = '111111'
 const MOBILE_PHONE_REGEX = /^1\d{10}$/
 const DETAIL_SECTION_TYPES = new Set(['text', 'richtext', 'image', 'video', 'gallery', 'features', 'specs', 'downloads', 'quote'])
