@@ -1,0 +1,72 @@
+[
+  {
+    "id": "hualancai",
+    "name": "华篮彩",
+    "englishName": "Hualancai",
+    "slogan": "礼赠型生鲜蔬果品牌",
+    "description": "华篮彩聚焦节令蔬果礼盒、企业福利和高品质礼赠场景，强调食材鲜度、包装表达与节庆氛围。",
+    "coverImage": "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=1200&q=80",
+    "color": "#d56e3b",
+    "isOwned": true,
+    "isVisible": true,
+    "sortOrder": 1,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "suque",
+    "name": "蔬雀",
+    "englishName": "Suque",
+    "slogan": "轻鲜零售与社区餐桌品牌",
+    "description": "蔬雀偏向日常高频消费场景，覆盖禽蛋、生鲜蔬菜与家庭快消农产品，强调轻量包装与稳定复购。",
+    "coverImage": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80",
+    "color": "#5f8b45",
+    "isOwned": true,
+    "isVisible": true,
+    "sortOrder": 2,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "xingyue-you-nong",
+    "name": "星月优农",
+    "englishName": "Xingyue YouNong",
+    "slogan": "生态粮油与健康食材品牌",
+    "description": "星月优农承担绿优源在生态粮油、杂粮组合和健康食材方向的品牌化输出，适合零售、电商和礼盒组合。",
+    "coverImage": "https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?auto=format&fit=crop&w=1200&q=80",
+    "color": "#556d9c",
+    "isOwned": true,
+    "isVisible": true,
+    "sortOrder": 3,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "guyeji",
+    "name": "谷野集",
+    "englishName": "Guyeji",
+    "slogan": "合作型山地风味品牌",
+    "description": "谷野集是绿优源合作引入的外部品牌，适合承接茶饮、山珍与特色农副产品的联合销售与渠道展示。",
+    "coverImage": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1200&q=80",
+    "color": "#8b5f3d",
+    "isOwned": false,
+    "isVisible": false,
+    "sortOrder": 4,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "qingnongtou",
+    "name": "清农投",
+    "englishName": "Qingnongtou",
+    "slogan": "合作展示笋制品与地方风味食品品牌",
+    "description": "清农投作为当前商品详情页展示出的品牌信息，适合承接笋制品、地方风味零食和即食佐餐类单品的官网展示。",
+    "coverImage": "/pdd-red-oil-bamboo-shoots.jpg",
+    "color": "#c94832",
+    "isOwned": false,
+    "isVisible": false,
+    "sortOrder": 5,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  }
+]

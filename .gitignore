@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.DS_Store
+.env
+.env.*
+server/node_modules
+server/data/*.bak
+website/node_modules
+website/dist
+admin/node_modules
+admin/dist

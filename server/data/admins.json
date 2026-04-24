@@ -1,0 +1,24 @@
+[
+  {
+    "id": "f25b5339-cf4f-4f19-8249-fff1bdefedde",
+    "phone": "13900000000",
+    "isSystemAdmin": false,
+    "passwordHash": "cf4f19c1f0b2a5c9bb098213820f7b95de9d7b1398a59c9a3d55f4341139c18ebadd0d7c0d0f249175f1d89ee080c846871fd15296e0b02605c78d4ea155a295",
+    "passwordSalt": "436b5a2eea1d3013645c4f7c77756b5e",
+    "mustChangePassword": false,
+    "createdAt": "2026-04-24T01:36:54.599Z",
+    "updatedAt": "2026-04-24T01:37:30.770Z",
+    "lastLoginAt": "2026-04-24T01:37:30.662Z"
+  },
+  {
+    "id": "dd881358-6658-4e10-9ae1-3f6ae394de37",
+    "phone": "15915310173",
+    "isSystemAdmin": true,
+    "passwordHash": "a70c2e2ffd15bc042e2d1354cffd01dc0e185bdfc882e8241db98848f2edd80f5d23c32b76aa61f20bf0cf6579437e43e3114776f05df38176587f8b3ea3c766",
+    "passwordSalt": "59225e85e9b093a0451bfb9f504966cf",
+    "mustChangePassword": false,
+    "createdAt": "2026-04-24T02:15:00.966Z",
+    "updatedAt": "2026-04-24T03:27:00.322Z",
+    "lastLoginAt": "2026-04-24T03:27:00.322Z"
+  }
+]

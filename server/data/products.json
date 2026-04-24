@@ -1,0 +1,406 @@
+[
+  {
+    "id": "organic-rice-001",
+    "brandId": "xingyue-you-nong",
+    "name": "富硒生态大米",
+    "category": "粮油米面",
+    "origin": "黑龙江五常合作基地",
+    "priceLabel": "¥89 / 5kg",
+    "description": "采用生态种植和低温储藏工艺，米粒饱满、饭香自然，适合家庭餐桌与团购礼赠。",
+    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1200&q=80",
+    "badge": "主推单品",
+    "highlights": [
+      "自然晾晒稻谷",
+      "富硒土壤培育",
+      "企业团购常备"
+    ],
+    "detailSections": [
+      {
+        "id": "rice-story",
+        "type": "text",
+        "title": "产品故事",
+        "content": "这款大米来自黑龙江五常合作基地，采用生态种植、低温储藏和批次筛选工艺，重点服务家庭餐桌、福利团购和礼赠场景。"
+      },
+      {
+        "id": "rice-richtext",
+        "type": "richtext",
+        "title": "采购与陈列建议",
+        "content": "这款大米适合做稳定型主粮单品，也适合与蜂蜜、杂粮、禽蛋做组合销售。\n\n- 家庭零售适合突出口感与产地故事\n- 企业团购适合突出礼赠包装与稳定交付\n- 社区渠道适合强调常备与复购场景"
+      },
+      {
+        "id": "rice-gallery",
+        "type": "gallery",
+        "title": "产地与成品展示",
+        "images": [
+          "https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=1200&q=80"
+        ],
+        "caption": "展示种植环境、稻谷状态与成品包装效果。"
+      },
+      {
+        "id": "rice-specs",
+        "type": "specs",
+        "title": "规格信息",
+        "specs": [
+          { "label": "净含量", "value": "5kg" },
+          { "label": "储藏方式", "value": "阴凉干燥处保存" },
+          { "label": "适用场景", "value": "家庭餐桌、团购福利、礼赠" }
+        ]
+      }
+    ],
+    "isFeatured": true,
+    "isPublished": true,
+    "sortOrder": 1,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "tea-002",
+    "brandId": "guyeji",
+    "name": "高山明前绿茶",
+    "category": "茶饮冲调",
+    "origin": "浙江安吉合作茶园",
+    "priceLabel": "¥168 / 250g",
+    "description": "精选春季头采嫩芽，茶汤清亮回甘，适合企业伴手礼和高品质零售渠道。",
+    "image": "https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?auto=format&fit=crop&w=1200&q=80",
+    "badge": "礼赠推荐",
+    "highlights": [
+      "明前嫩芽采摘",
+      "低温锁鲜烘焙",
+      "适配礼盒包装"
+    ],
+    "detailSections": [
+      {
+        "id": "tea-hero",
+        "type": "image",
+        "title": "明前头采",
+        "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80",
+        "caption": "头春嫩芽，保留高山茶园的鲜爽风味。"
+      },
+      {
+        "id": "tea-features",
+        "type": "features",
+        "title": "核心卖点",
+        "items": [
+          "清香鲜爽，适合高品质礼赠与商务场景",
+          "包装规格清晰，适配门店与电商售卖",
+          "可配合礼盒、品牌联名和伴手礼包装"
+        ]
+      },
+      {
+        "id": "tea-video",
+        "type": "video",
+        "title": "视频展示",
+        "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        "posterImage": "https://images.unsplash.com/photo-1507914372368-b2b085b925a1?auto=format&fit=crop&w=1400&q=80",
+        "caption": "可替换为采茶、冲泡、礼盒开箱等商品视频内容。"
+      },
+      {
+        "id": "tea-quote",
+        "type": "quote",
+        "quote": "适合放进礼盒，也适合单独陈列，是合作渠道里最稳定的高端茶饮单品。",
+        "author": "绿优源选品团队"
+      }
+    ],
+    "isFeatured": true,
+    "isPublished": true,
+    "sortOrder": 2,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "eggs-003",
+    "brandId": "suque",
+    "name": "散养土鸡蛋",
+    "category": "生鲜禽蛋",
+    "origin": "安徽山地散养农场",
+    "priceLabel": "¥39 / 30枚",
+    "description": "从源头严选散养鸡场，蛋黄饱满、口感扎实，适合社区团购和高频家庭消费。",
+    "image": "https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=1200&q=80",
+    "badge": "社区爆款",
+    "highlights": [
+      "散养方式饲育",
+      "冷链配送支持",
+      "适合社区团购"
+    ],
+    "detailSections": [
+      {
+        "id": "egg-story",
+        "type": "text",
+        "title": "适合高频消费",
+        "content": "蔬雀系列土鸡蛋强调高频、稳定和家庭刚需，适合社区零售、团购分发与家庭餐桌长期采购。"
+      },
+      {
+        "id": "egg-gallery",
+        "type": "gallery",
+        "title": "养殖与包装",
+        "images": [
+          "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=1200&q=80"
+        ],
+        "caption": "可展示散养环境、蛋品细节与社区包装形态。"
+      },
+      {
+        "id": "egg-specs",
+        "type": "specs",
+        "title": "采购信息",
+        "specs": [
+          { "label": "包装", "value": "30 枚 / 盒" },
+          { "label": "配送建议", "value": "冷链或当日同城配送" },
+          { "label": "推荐渠道", "value": "社区团购、商超、团餐" }
+        ]
+      }
+    ],
+    "isFeatured": false,
+    "isPublished": true,
+    "sortOrder": 3,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "honey-004",
+    "brandId": "guyeji",
+    "name": "山泉百花蜂蜜",
+    "category": "滋补特产",
+    "origin": "秦岭生态蜂场",
+    "priceLabel": "¥128 / 500g",
+    "description": "多花源自然成熟蜜，质地细腻、花香层次丰富，适合零售、电商和品牌联名。",
+    "image": "https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=1200&q=80",
+    "badge": "品牌联名",
+    "highlights": [
+      "百花蜜源",
+      "成熟蜜采收",
+      "支持定制贴牌"
+    ],
+    "detailSections": [
+      {
+        "id": "honey-image",
+        "type": "image",
+        "title": "自然成熟蜜",
+        "image": "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=1400&q=80",
+        "caption": "强调花源、成熟度与天然质感。"
+      },
+      {
+        "id": "honey-features",
+        "type": "features",
+        "title": "联名与零售优势",
+        "items": [
+          "可支持贴牌与品牌联名包装",
+          "适合滋补礼赠、电商零售与伴手礼",
+          "内容表达上兼具天然感与品质感"
+        ]
+      }
+    ],
+    "isFeatured": false,
+    "isPublished": true,
+    "sortOrder": 4,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "gift-box-005",
+    "brandId": "hualancai",
+    "name": "时令蔬果礼盒",
+    "category": "礼盒定制",
+    "origin": "华东多产区联合直采",
+    "priceLabel": "¥199 / 盒",
+    "description": "根据节令搭配优质蔬果与包装方案，适合节庆福利、商务礼赠和渠道定制。",
+    "image": "https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=1200&q=80",
+    "badge": "企业福利",
+    "highlights": [
+      "按季更新品类",
+      "支持包装定制",
+      "适合企业福利"
+    ],
+    "detailSections": [
+      {
+        "id": "gift-text",
+        "type": "text",
+        "title": "定制型礼盒方案",
+        "content": "华篮彩系列礼盒适配节令福利、企业节庆礼赠和渠道团购，重点在食材搭配、包装层次和交付体验。"
+      },
+      {
+        "id": "gift-gallery",
+        "type": "gallery",
+        "title": "礼盒展示",
+        "images": [
+          "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=80"
+        ],
+        "caption": "可呈现组合搭配、礼盒包装与礼赠场景。"
+      },
+      {
+        "id": "gift-specs",
+        "type": "specs",
+        "title": "定制参数",
+        "specs": [
+          { "label": "可选内容", "value": "水果、蔬菜、禽蛋、干货组合" },
+          { "label": "包装形式", "value": "礼盒、手提箱、福利套装" },
+          { "label": "服务对象", "value": "企业福利、商务礼赠、节庆活动" }
+        ]
+      },
+      {
+        "id": "gift-downloads",
+        "type": "downloads",
+        "title": "方案资料下载",
+        "files": [
+          {
+            "name": "礼盒方案手册",
+            "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            "description": "适合替换为产品手册、招商资料或团购方案 PDF。"
+          },
+          {
+            "name": "采购清单示例",
+            "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            "description": "可用于演示价格表、SKU 清单与配货建议。"
+          }
+        ]
+      }
+    ],
+    "isFeatured": true,
+    "isPublished": true,
+    "sortOrder": 5,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "grains-006",
+    "brandId": "xingyue-you-nong",
+    "name": "五谷杂粮组合",
+    "category": "健康食材",
+    "origin": "河南与山西合作仓",
+    "priceLabel": "¥76 / 8袋",
+    "description": "精选红豆、燕麦、黑米与小米组合，包装统一、适合家庭常备及线上零售组合销售。",
+    "image": "https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=1200&q=80",
+    "badge": "家庭常备",
+    "highlights": [
+      "小包装组合",
+      "适配线上零售",
+      "营养搭配清晰"
+    ],
+    "detailSections": [
+      {
+        "id": "grain-features",
+        "type": "features",
+        "title": "组合亮点",
+        "items": [
+          "适合家庭常备和早餐搭配",
+          "小包装更适合线上零售与试吃装",
+          "适合与大米、蜂蜜等做健康组合售卖"
+        ]
+      },
+      {
+        "id": "grain-quote",
+        "type": "quote",
+        "quote": "这类组合型产品特别适合做电商搭配页，图文越完整，转化越稳定。",
+        "author": "绿优源运营团队"
+      }
+    ],
+    "isFeatured": false,
+    "isPublished": false,
+    "sortOrder": 6,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "red-oil-bamboo-shoots-007",
+    "brandId": "qingnongtou",
+    "name": "红油泡椒脆笋",
+    "category": "休闲零食",
+    "origin": "广东清远英德",
+    "priceLabel": "¥11.72 / 拼购价",
+    "description": "当前商品页展示为清马同款脆笋，主打红油泡椒风味。商品长图可见产地为广东清远英德，页面可见品牌为清农投，规格为 640g 袋装，脆嫩开袋即食，也适合拌饭下饭。",
+    "image": "/pdd-red-oil-bamboo-shoots.jpg",
+    "badge": "拼多多热卖",
+    "highlights": [
+      "红油泡椒风味",
+      "640g 袋装",
+      "已抢 1.5 万+ 包"
+    ],
+    "detailSections": [
+      {
+        "id": "bamboo-hero-image",
+        "type": "image",
+        "title": "商品主图",
+        "image": "/pdd-red-oil-bamboo-shoots.jpg",
+        "caption": "从模拟器中的拼多多商品页截取，展示红油脆笋包装、食用状态与即食场景。"
+      },
+      {
+        "id": "bamboo-page-summary",
+        "type": "richtext",
+        "title": "页面提取信息",
+        "content": "当前页可读商品名：清马同款脆笋新鲜西牛麻红油泡椒脆笋零食解馋即食整箱开袋。\n\n- 当前拼购价：¥11.72\n- 原拼单价：¥21.9\n- 页面提示：已抢 1.5 万+ 包，即将卖完\n- 当前页展示：45 人在拼，商品评价 948 条\n- 店铺名称：乐都百货店\n- 页面抬头信息：店铺热销榜第 1 名"
+      },
+      {
+        "id": "bamboo-features",
+        "type": "features",
+        "title": "消费者感知卖点",
+        "items": [
+          "脆笋口感偏脆嫩，适合开袋即食，也适合拌饭下饭",
+          "整体辣度不高，酸香更突出，适合更广人群",
+          "页面评论里多次提到分量足、复购高、口味更偏红油款",
+          "长图里反复强调鲜嫩脆爽、深层入味和泡椒风味"
+        ]
+      },
+      {
+        "id": "bamboo-specs",
+        "type": "specs",
+        "title": "规格与渠道信息",
+        "specs": [
+          { "label": "当前渠道", "value": "拼多多商品页" },
+          { "label": "品牌", "value": "清农投" },
+          { "label": "当前到手价", "value": "¥11.72（页面活动价）" },
+          { "label": "单独购买价", "value": "¥23.9" },
+          { "label": "店铺", "value": "乐都百货店" },
+          { "label": "净含量", "value": "640g" },
+          { "label": "包装方式", "value": "袋装" },
+          { "label": "商品产地", "value": "清远英德" },
+          { "label": "保质期", "value": "9个月" },
+          { "label": "食用方法", "value": "开袋即食" },
+          { "label": "固体物含量", "value": "≥80%" },
+          { "label": "生产商", "value": "清远农投笋业有限公司" },
+          { "label": "储存条件", "value": "置于阴凉干燥处，避免阳光直射" },
+          { "label": "包装可见文案", "value": "红油脆笋 / Crispy Bamboo Shoots" },
+          { "label": "包装可见信息", "value": "清远农投集团荣誉出品" }
+        ]
+      },
+      {
+        "id": "bamboo-gallery",
+        "type": "gallery",
+        "title": "页面截图补充",
+        "images": [
+          "/pdd-red-oil-bamboo-shoots-banner.png",
+          "/pdd-red-oil-bamboo-shoots-specs.png",
+          "/pdd-red-oil-bamboo-shoots-reviews.png",
+          "/pdd-deep-3.jpg",
+          "/pdd-deep-4.jpg",
+          "/pdd-deep-8.jpg"
+        ],
+        "caption": "补齐 banner、规格区、评价区和长图详情区，避免官网只依赖单张主图。"
+      },
+      {
+        "id": "bamboo-review-quote",
+        "type": "quote",
+        "quote": "我感觉红油的要比泡椒的好吃，而且不怎么辣，笋也特别嫩。",
+        "author": "商品评价摘录"
+      },
+      {
+        "id": "bamboo-review-richtext",
+        "type": "richtext",
+        "title": "评价页补充摘录",
+        "content": "- 评价页可见口味选项：热销款 15包+赠送1包 混合口味袋装\n- 评价页另有用户反馈：超值实惠装 40包红油口味\n- 评价关键词集中在：好吃、笋很嫩、分量多、质量软、价格合理\n- 商品长图可见：泡椒脆笋、红油脆笋两种风味方向都在页面里出现"
+      },
+      {
+        "id": "bamboo-ingredient-richtext",
+        "type": "richtext",
+        "title": "长图提取的配料与营养信息",
+        "content": "- 配料表可见：竹笋、辣椒油（植物油、辣椒）、食用盐、白砂糖、食品添加剂、食用香精香料\n- 营养成分表（每100克）：能量 275千焦，蛋白质 1.4克，脂肪 4.0克，碳水化合物 4.1克，钠 2075毫克\n- 长图文案：来自深山的美味、鲜嫩脆爽、深层入味、色泽明亮"
+      }
+    ],
+    "isFeatured": false,
+    "isPublished": true,
+    "sortOrder": 7,
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-04-24T00:00:00.000Z"
+  }
+]

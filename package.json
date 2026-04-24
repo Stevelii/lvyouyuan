@@ -1,0 +1,16 @@
+{
+  "name": "lvyouyuan-site-suite",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "npm install --prefix server && npm install --prefix website && npm install --prefix admin && npm install",
+    "dev": "concurrently -n server,website,admin -c green,blue,magenta \"npm --prefix server run dev\" \"npm --prefix website run dev -- --host\" \"npm --prefix admin run dev -- --host\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:website": "npm --prefix website run dev -- --host",
+    "dev:admin": "npm --prefix admin run dev -- --host",
+    "build": "npm --prefix website run build && npm --prefix admin run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
