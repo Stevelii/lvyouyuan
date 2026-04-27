@@ -1,6 +1,10 @@
 import cors from 'cors'
 import express from 'express'
+import multer from 'multer'
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypto'
+import { mkdirSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { databaseName, execute, query, queryOne } from './db.js'
 
 const app = express()
@@ -9,9 +13,54 @@ const DEFAULT_PASSWORD = '111111'
 const MOBILE_PHONE_REGEX = /^1\d{10}$/
 const DETAIL_SECTION_TYPES = new Set(['text', 'richtext', 'image', 'video', 'gallery', 'features', 'specs', 'downloads', 'quote'])
 const sessions = new Map()
+const serverRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const uploadsRoot = path.join(serverRoot, 'uploads')
+const allowedUploadExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif'])
+
+mkdirSync(uploadsRoot, { recursive: true })
+
+function sanitizeUploadSubdir(value) {
+  return String(value ?? 'products')
+    .split('/')
+    .map((segment) => segment.trim().replace(/[^a-zA-Z0-9_-]/g, ''))
+    .filter(Boolean)
+    .slice(0, 3)
+    .join('/')
+}
+
+const uploadStorage = multer.diskStorage({
+  destination(request, _file, callback) {
+    const subdir = sanitizeUploadSubdir(request.body.subdir)
+    const destination = path.join(uploadsRoot, subdir || 'products')
+    mkdirSync(destination, { recursive: true })
+    callback(null, destination)
+  },
+  filename(_request, file, callback) {
+    const extension = path.extname(file.originalname).toLowerCase()
+    const safeExtension = allowedUploadExtensions.has(extension) ? extension : '.jpg'
+    callback(null, `${Date.now()}-${randomUUID()}${safeExtension}`)
+  }
+})
+
+const uploadImages = multer({
+  storage: uploadStorage,
+  limits: {
+    files: 12,
+    fileSize: 8 * 1024 * 1024
+  },
+  fileFilter(_request, file, callback) {
+    if (file.mimetype.startsWith('image/')) {
+      callback(null, true)
+      return
+    }
+
+    callback(new Error('仅支持上传图片文件'))
+  }
+})
 
 app.use(cors())
 app.use(express.json({ limit: '2mb' }))
+app.use('/api/uploads', express.static(uploadsRoot))
 
 function createPasswordHash(password, salt = randomBytes(16).toString('hex')) {
   return {
@@ -833,6 +882,31 @@ app.post('/api/admin/users', requireAdmin, requireSystemAdmin, async (request, r
   response.status(201).json(sanitizeAdmin(admin))
 })
 
+app.post('/api/admin/uploads/images', requireAdmin, (request, response, next) => {
+  uploadImages.array('files', 12)(request, response, (error) => {
+    if (error) {
+      next(error)
+      return
+    }
+
+    next()
+  })
+}, async (request, response) => {
+  const files = Array.isArray(request.files) ? request.files : []
+
+  if (!files.length) {
+    response.status(400).json({ message: '请先选择要上传的图片' })
+    return
+  }
+
+  const urls = files.map((file) => {
+    const relativePath = path.relative(uploadsRoot, file.path).split(path.sep).join('/')
+    return `/api/uploads/${relativePath}`
+  })
+
+  response.status(201).json({ urls })
+})
+
 app.get('/api/admin/brands', requireAdmin, async (_request, response) => {
   const brands = await fetchBrands()
   response.json(hydrateBrands(brands))
@@ -953,6 +1027,21 @@ app.delete('/api/admin/products/:id', requireAdmin, async (request, response) =>
 
 app.use((error, _request, response, _next) => {
   console.error('API error:', error)
+
+  if (error?.message === '仅支持上传图片文件') {
+    response.status(400).json({
+      message: error.message
+    })
+    return
+  }
+
+  if (error?.code === 'LIMIT_FILE_SIZE') {
+    response.status(400).json({
+      message: '单张图片不能超过 8MB'
+    })
+    return
+  }
+
   response.status(500).json({
     message: '服务器处理请求时出错，请稍后重试'
   })

@@ -1,5 +1,5 @@
 import { startTransition, useDeferredValue, useEffect, useMemo, useState } from 'react'
-import type { CSSProperties, FormEvent } from 'react'
+import type { CSSProperties, ChangeEvent, FormEvent } from 'react'
 import {
   AuthError,
   changePassword,
@@ -14,6 +14,7 @@ import {
   fetchCurrentAdmin,
   loginAdmin,
   logoutAdmin,
+  uploadAdminImages,
   updateBrand,
   updateProduct
 } from './lib/api'
@@ -604,6 +605,90 @@ function App() {
     }
 
     setStatus(error instanceof Error ? error.message : fallbackMessage)
+  }
+
+  async function uploadImagesAndApply(
+    files: File[],
+    subdir: string,
+    onUploaded: (urls: string[]) => void,
+    successMessage: string
+  ) {
+    if (!token || !files.length) {
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      const result = await uploadAdminImages(token, files, subdir)
+
+      if (!result.urls.length) {
+        throw new Error('上传成功，但没有拿到图片地址')
+      }
+
+      onUploaded(result.urls)
+      setStatus(successMessage)
+    } catch (error) {
+      handleApiError(error, '上传图片失败')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function getSelectedFiles(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? [])
+    event.target.value = ''
+    return files
+  }
+
+  async function handleUploadProductImage(files: File[]) {
+    await uploadImagesAndApply(
+      files,
+      'products',
+      (urls) => {
+        updateProductForm('image', urls[0] ?? '')
+      },
+      '商品主图已上传并写入表单'
+    )
+  }
+
+  async function handleUploadBrandImage(files: File[]) {
+    await uploadImagesAndApply(
+      files,
+      'brands',
+      (urls) => {
+        updateBrandForm('coverImage', urls[0] ?? '')
+      },
+      '品牌封面图已上传并写入表单'
+    )
+  }
+
+  async function handleUploadDetailImage(sectionId: string, field: 'image' | 'posterImage', files: File[]) {
+    await uploadImagesAndApply(
+      files,
+      field === 'posterImage' ? 'products/posters' : 'products/details',
+      (urls) => {
+        handleUpdateDetailSection(sectionId, (current) => ({
+          ...current,
+          [field]: urls[0] ?? ''
+        }))
+      },
+      field === 'posterImage' ? '视频封面图已上传并写入表单' : '详情图片已上传并写入表单'
+    )
+  }
+
+  async function handleUploadGalleryImages(sectionId: string, files: File[]) {
+    await uploadImagesAndApply(
+      files,
+      'products/gallery',
+      (urls) => {
+        handleUpdateDetailSection(sectionId, (current) => ({
+          ...current,
+          images: [...(current.images ?? []), ...urls]
+        }))
+      },
+      `已上传 ${files.length} 张图集图片`
+    )
   }
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
@@ -1358,6 +1443,21 @@ function App() {
                     onChange={(event) => updateProductForm('image', event.target.value)}
                   />
                 </label>
+                <div className="upload-actions">
+                  <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                    直接上传商品图片
+                    <input
+                      accept="image/*"
+                      disabled={saving}
+                      type="file"
+                      onChange={(event) => {
+                        const files = getSelectedFiles(event)
+                        void handleUploadProductImage(files)
+                      }}
+                    />
+                  </label>
+                  <span className="field-tip">上传后会自动填入本地图片地址，也可以继续手动修改 URL。</span>
+                </div>
 
                 <label>
                   商品描述
@@ -1518,6 +1618,21 @@ function App() {
                                 }
                               />
                             </label>
+                            <div className="upload-actions">
+                              <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                                上传详情图片
+                                <input
+                                  accept="image/*"
+                                  disabled={saving}
+                                  type="file"
+                                  onChange={(event) => {
+                                    const files = getSelectedFiles(event)
+                                    void handleUploadDetailImage(section.id, 'image', files)
+                                  }}
+                                />
+                              </label>
+                              <span className="field-tip">适合商品详情里的单张图片模块。</span>
+                            </div>
                             <label>
                               图片说明
                               <textarea
@@ -1561,6 +1676,21 @@ function App() {
                                 }
                               />
                             </label>
+                            <div className="upload-actions">
+                              <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                                上传视频封面图
+                                <input
+                                  accept="image/*"
+                                  disabled={saving}
+                                  type="file"
+                                  onChange={(event) => {
+                                    const files = getSelectedFiles(event)
+                                    void handleUploadDetailImage(section.id, 'posterImage', files)
+                                  }}
+                                />
+                              </label>
+                              <span className="field-tip">如果视频是外部链接，封面图也可以单独上传到服务器。</span>
+                            </div>
                             <label>
                               视频说明
                               <textarea
@@ -1592,6 +1722,22 @@ function App() {
                                 }
                               />
                             </label>
+                            <div className="upload-actions">
+                              <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                                批量上传图集图片
+                                <input
+                                  accept="image/*"
+                                  disabled={saving}
+                                  multiple
+                                  type="file"
+                                  onChange={(event) => {
+                                    const files = getSelectedFiles(event)
+                                    void handleUploadGalleryImages(section.id, files)
+                                  }}
+                                />
+                              </label>
+                              <span className="field-tip">新上传的图片会自动追加到图集列表末尾。</span>
+                            </div>
                             <label>
                               图集说明
                               <textarea
@@ -1806,6 +1952,21 @@ function App() {
                     onChange={(event) => updateBrandForm('coverImage', event.target.value)}
                   />
                 </label>
+                <div className="upload-actions">
+                  <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                    直接上传品牌图片
+                    <input
+                      accept="image/*"
+                      disabled={saving}
+                      type="file"
+                      onChange={(event) => {
+                        const files = getSelectedFiles(event)
+                        void handleUploadBrandImage(files)
+                      }}
+                    />
+                  </label>
+                  <span className="field-tip">品牌页封面图会存到服务器本地，并自动回填到当前字段。</span>
+                </div>
 
                 <label>
                   品牌介绍

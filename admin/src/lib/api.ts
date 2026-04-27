@@ -210,3 +210,24 @@ export async function createAdminUser(token: string, form: AdminUserForm) {
   await ensureResponse(response, '新增管理员失败')
   return parseJson<AdminProfile>(response)
 }
+
+export async function uploadAdminImages(token: string, files: File[] | FileList, subdir = 'products') {
+  const payload = new FormData()
+
+  for (const file of Array.from(files)) {
+    payload.append('files', file)
+  }
+
+  payload.append('subdir', subdir)
+
+  const response = await fetch(`${API_BASE_URL}/admin/uploads/images`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: payload
+  })
+
+  await ensureResponse(response, '上传图片失败')
+  return parseJson<{ urls: string[] }>(response)
+}

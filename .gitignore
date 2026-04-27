@@ -5,6 +5,7 @@ coverage
 .env
 .env.*
 server/node_modules
+server/uploads
 server/data/*.bak
 website/node_modules
 website/dist

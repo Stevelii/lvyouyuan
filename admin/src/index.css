@@ -330,6 +330,14 @@ img {
   gap: 12px;
 }
 
+.upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: -6px;
+}
+
 .switch-item {
   flex: 1 1 220px;
   min-height: 72px;
@@ -409,6 +417,25 @@ img {
 .switcher-button:hover {
   border-color: rgba(87, 112, 60, 0.22);
   background: rgba(255, 255, 255, 0.94);
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-button--disabled input {
+  cursor: not-allowed;
 }
 
 .button-primary:disabled,
