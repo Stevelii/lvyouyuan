@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { CSSProperties, MouseEvent } from 'react'
-import { fetchBrands, fetchProducts } from './lib/api'
-import type { Brand, Product, ProductDetailSection } from './types'
+import { fetchBrands, fetchProducts, fetchSiteContent } from './lib/api'
+import type { Brand, HomePageContent, Product, ProductDetailSection } from './types'
 
 const advantageItems = [
   {
@@ -24,6 +24,39 @@ const processSteps = [
   '详情页内容组织与网页展示',
   '面向渠道与客户持续交付'
 ]
+
+function createDefaultHomePageContent(): HomePageContent {
+  return {
+    heroEyebrow: 'From Brand To Product',
+    heroTitle: '绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。',
+    heroDescription:
+      '我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。',
+    primaryActionLabel: '查看品牌',
+    secondaryActionLabel: '查看商品',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    cards: [
+      {
+        id: 'hero-card-1',
+        image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '品牌样张',
+        title: '品牌主视觉卡片'
+      },
+      {
+        id: 'hero-card-2',
+        image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '商品表达',
+        title: '商品卖点组合展示'
+      },
+      {
+        id: 'hero-card-3',
+        image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '图文详情',
+        title: '详情内容封面卡片'
+      }
+    ]
+  }
+}
 
 function getPathname() {
   return window.location.pathname
@@ -68,6 +101,10 @@ function renderRichTextBlocks(content: string) {
 
 function isDirectVideoSource(url?: string) {
   return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url ?? '')
+}
+
+function getSpecValue(section: ProductDetailSection | undefined, label: string) {
+  return section?.specs?.find((spec) => spec.label === label)?.value ?? ''
 }
 
 function renderDetailSection(section: ProductDetailSection) {
@@ -230,6 +267,7 @@ function SiteHeader({ onSectionNavigate }: SiteHeaderProps) {
 
 type HomePageProps = {
   brands: Brand[]
+  content: HomePageContent
   products: Product[]
   loading: boolean
   error: string
@@ -239,6 +277,7 @@ type HomePageProps = {
 
 function HomePage({
   brands,
+  content,
   products,
   loading,
   error,
@@ -255,33 +294,50 @@ function HomePage({
     [brands]
   )
 
+  const heroCards = useMemo(() => {
+    return Array.from({ length: 3 }, (_, index) => {
+      const contentCard = content.cards[index]
+      const featuredProduct = featuredProducts[index]
+
+      return {
+        id: contentCard?.id ?? featuredProduct?.id ?? `hero-card-${index + 1}`,
+        image: contentCard?.image || featuredProduct?.image || '',
+        eyebrow: contentCard?.eyebrow || featuredProduct?.brandName || '主视觉卡片',
+        title: contentCard?.title || featuredProduct?.name || '等待配置'
+      }
+    })
+  }, [content.cards, featuredProducts])
+
   return (
     <main id="top">
-      <section className="hero-section">
+      <section
+        className="hero-section"
+        style={{ '--hero-background-image': `url("${content.backgroundImage}")` } as CSSProperties}
+      >
         <div className="hero-copy">
-          <p className="eyebrow">From Brand To Product</p>
-          <h1>绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。</h1>
+          <p className="eyebrow">{content.heroEyebrow}</p>
+          <h1>{content.heroTitle}</h1>
           <p className="hero-description">
-            我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。
+            {content.heroDescription}
           </p>
           <div className="hero-actions">
             <a className="primary-link" href="/#brands" onClick={(event) => onSectionNavigate(event, 'brands')}>
-              查看品牌
+              {content.primaryActionLabel}
             </a>
             <a className="ghost-link" href="/#products" onClick={(event) => onSectionNavigate(event, 'products')}>
-              查看商品
+              {content.secondaryActionLabel}
             </a>
           </div>
         </div>
 
         <div className="hero-visual" aria-hidden="true">
-          {featuredProducts.length > 0 ? (
-            featuredProducts.map((product, index) => (
-              <article className={`floating-product floating-product--${index + 1}`} key={product.id}>
-                <img src={product.image} alt={product.name} />
+          {heroCards.some((card) => card.image || card.title) ? (
+            heroCards.map((card, index) => (
+              <article className={`floating-product floating-product--${index + 1}`} key={card.id}>
+                {card.image ? <img src={card.image} alt={card.title} /> : null}
                 <div>
-                  <span>{product.brandName}</span>
-                  <strong>{product.name}</strong>
+                  <span>{card.eyebrow}</span>
+                  <strong>{card.title}</strong>
                 </div>
               </article>
             ))
@@ -498,9 +554,28 @@ function ProductDetailPage({
     )
   }
 
+  const heroSection = product.detailSections.find((section) => section.type === 'image')
+  const featuresSection = product.detailSections.find((section) => section.type === 'features')
+  const specsSection = product.detailSections.find((section) => section.type === 'specs')
+  const quoteSection = product.detailSections.find((section) => section.type === 'quote')
+  const gallerySection = product.detailSections.find((section) => section.type === 'gallery')
+  const sellingPoints = (featuresSection?.items?.length ? featuresSection.items : product.highlights).slice(0, 4)
+  const highlightCards = product.highlights.slice(0, 3)
+  const keySpecs = [
+    { label: '净含量', value: getSpecValue(specsSection, '净含量') },
+    { label: '包装方式', value: getSpecValue(specsSection, '包装方式') },
+    { label: '保质期', value: getSpecValue(specsSection, '保质期') },
+    { label: '食用方法', value: getSpecValue(specsSection, '食用方法') }
+  ].filter((spec) => spec.value)
+  const evidenceImages = Array.from(new Set(gallerySection?.images ?? [])).slice(0, 3)
+  const detailSections = product.detailSections.filter((section) => {
+    return ![heroSection?.id, featuresSection?.id, specsSection?.id, quoteSection?.id].includes(section.id)
+  })
+  const hasRailContent = Boolean(featuresSection || specsSection || quoteSection)
+
   return (
     <main className="detail-shell">
-      <section className="detail-hero">
+      <section className="detail-hero detail-hero--product">
         <div className="detail-hero__copy">
           <a className="detail-back" href="/" onClick={(event) => onHomeNavigate(event, 'products')}>
             返回商品列表
@@ -518,40 +593,128 @@ function ProductDetailPage({
             {product.badge ? <span className="detail-chip">{product.badge}</span> : null}
             {product.isFeatured ? <span className="detail-chip">官网主推</span> : null}
           </div>
+          {sellingPoints.length > 0 ? (
+            <ul className="detail-selling-points">
+              {sellingPoints.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : null}
+          <div className="detail-purchase-card">
+            <span className="detail-purchase-card__label">渠道参考信息</span>
+            <strong>{product.priceLabel}</strong>
+            <p>官网图像已重制，价格、规格与评价信息仍以当前抓取到的商品页内容为基础整理。</p>
+            {keySpecs.length > 0 ? (
+              <div className="detail-purchase-grid">
+                {keySpecs.map((spec) => (
+                  <div className="detail-purchase-grid__item" key={spec.label}>
+                    <span>{spec.label}</span>
+                    <strong>{spec.value}</strong>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </div>
-        <div className="detail-hero__media">
-          <img src={product.image} alt={product.name} />
+        <div className="detail-hero__media detail-hero__media--poster">
+          <img src={heroSection?.image || product.image} alt={product.name} />
+          {evidenceImages.length > 0 ? (
+            <div className="detail-proof-strip">
+              {evidenceImages.map((image) => (
+                <img alt={`${product.name} 页面取材`} key={image} src={image} />
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
 
       <section className="detail-intro">
         <div className="detail-intro__main">
-          <h2>产品亮点</h2>
-          <ul className="detail-highlight-list">
-            {product.highlights.map((item) => (
-              <li key={item}>{item}</li>
+          <p className="eyebrow">产品亮点</p>
+          <h2>把风味、规格和食用场景收束成一页更像商品详情的展示。</h2>
+          <div className="detail-highlight-grid">
+            {highlightCards.map((item) => (
+              <article className="detail-highlight-card" key={item}>
+                <span>0{highlightCards.indexOf(item) + 1}</span>
+                <strong>{item}</strong>
+              </article>
             ))}
-          </ul>
+          </div>
         </div>
         <aside className="detail-intro__side">
           <h3>所属品牌</h3>
           <strong>{product.brandName}</strong>
           <p>{product.brandEnglishName || 'Brand Introduction'}</p>
+          <div className="detail-intro__facts">
+            <div className="detail-fact">
+              <span>商品分类</span>
+              <strong>{product.category}</strong>
+            </div>
+            <div className="detail-fact">
+              <span>商品产地</span>
+              <strong>{product.origin}</strong>
+            </div>
+            <div className="detail-fact">
+              <span>展示方式</span>
+              <strong>生成图主导 + 产品资料整理</strong>
+            </div>
+          </div>
           <a className="ghost-link" href="/" onClick={(event) => onHomeNavigate(event, 'brands')}>
             查看品牌矩阵
           </a>
         </aside>
       </section>
 
-      <div className="detail-content">
-        {product.detailSections.length > 0 ? (
-          product.detailSections.map((section) => renderDetailSection(section))
-        ) : (
-          <section className="detail-section detail-section--text">
-            <h2>更多介绍</h2>
-            <p>这个商品的图文详情还在补充中，稍后会通过后台继续完善。</p>
-          </section>
-        )}
+      <div className={`detail-content ${hasRailContent ? 'detail-content--split' : ''}`}>
+        <div className="detail-content__main">
+          {detailSections.length > 0 ? (
+            detailSections.map((section) => renderDetailSection(section))
+          ) : (
+            <section className="detail-section detail-section--text">
+              <h2>更多介绍</h2>
+              <p>这个商品的图文详情还在补充中，稍后会通过后台继续完善。</p>
+            </section>
+          )}
+        </div>
+
+        {hasRailContent ? (
+          <aside className="detail-content__rail">
+            {featuresSection?.items?.length ? (
+              <section className="detail-side-card">
+                <p className="eyebrow">风味感知</p>
+                <h2>{featuresSection.title || '核心卖点'}</h2>
+                <ul className="detail-side-card__list">
+                  {featuresSection.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {specsSection?.specs?.length ? (
+              <section className="detail-side-card">
+                <p className="eyebrow">规格信息</p>
+                <h2>{specsSection.title || '参数信息'}</h2>
+                <div className="detail-side-specs">
+                  {specsSection.specs.map((spec) => (
+                    <div className="detail-side-spec-row" key={`${spec.label}-${spec.value}`}>
+                      <span>{spec.label}</span>
+                      <strong>{spec.value}</strong>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {quoteSection?.quote ? (
+              <section className="detail-side-quote">
+                <p className="eyebrow">评价摘录</p>
+                <blockquote>{quoteSection.quote}</blockquote>
+                {quoteSection.author ? <cite>{quoteSection.author}</cite> : null}
+              </section>
+            ) : null}
+          </aside>
+        ) : null}
       </div>
 
       {relatedProducts.length > 0 ? (
@@ -585,6 +748,7 @@ function ProductDetailPage({
 function App() {
   const [brands, setBrands] = useState<Brand[]>([])
   const [products, setProducts] = useState<Product[]>([])
+  const [siteContent, setSiteContent] = useState<HomePageContent>(createDefaultHomePageContent())
   const [pathname, setPathname] = useState(getPathname)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -604,11 +768,16 @@ function App() {
 
     async function loadWebsiteData() {
       try {
-        const [nextProducts, nextBrands] = await Promise.all([fetchProducts(), fetchBrands()])
+        const [nextProducts, nextBrands, nextSiteContent] = await Promise.all([
+          fetchProducts(),
+          fetchBrands(),
+          fetchSiteContent()
+        ])
 
         if (active) {
           setProducts(nextProducts)
           setBrands(nextBrands)
+          setSiteContent(nextSiteContent)
           setError('')
         }
       } catch (loadError) {
@@ -671,6 +840,7 @@ function App() {
       ) : (
         <HomePage
           brands={brands}
+          content={siteContent}
           error={error}
           loading={loading}
           onProductNavigate={handleProductNavigate}

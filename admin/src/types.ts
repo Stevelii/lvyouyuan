@@ -52,6 +52,23 @@ export type Brand = {
   updatedAt: string
 }
 
+export type HomeHeroCard = {
+  id: string
+  image: string
+  eyebrow: string
+  title: string
+}
+
+export type HomePageContent = {
+  heroEyebrow: string
+  heroTitle: string
+  heroDescription: string
+  primaryActionLabel: string
+  secondaryActionLabel: string
+  backgroundImage: string
+  cards: HomeHeroCard[]
+}
+
 export type BrandForm = {
   id: string
   name: string

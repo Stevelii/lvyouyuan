@@ -22,6 +22,39 @@ function toBooleanNumber(value) {
   return value ? 1 : 0
 }
 
+function createDefaultHomePageContent() {
+  return {
+    heroEyebrow: 'From Brand To Product',
+    heroTitle: '绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。',
+    heroDescription:
+      '我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。',
+    primaryActionLabel: '查看品牌',
+    secondaryActionLabel: '查看商品',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    cards: [
+      {
+        id: 'hero-card-1',
+        image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '品牌样张',
+        title: '品牌主视觉卡片'
+      },
+      {
+        id: 'hero-card-2',
+        image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '商品表达',
+        title: '商品卖点组合展示'
+      },
+      {
+        id: 'hero-card-3',
+        image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '图文详情',
+        title: '详情内容封面卡片'
+      }
+    ]
+  }
+}
+
 async function createDatabase() {
   const connection = await createAdminConnection()
 
@@ -86,6 +119,15 @@ async function createTables() {
         FOREIGN KEY (brand_id) REFERENCES brands (id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `)
+
+  await execute(`
+    CREATE TABLE IF NOT EXISTS site_settings (
+      setting_key VARCHAR(128) PRIMARY KEY,
+      value_json LONGTEXT NOT NULL,
+      created_at VARCHAR(40) NOT NULL,
+      updated_at VARCHAR(40) NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `)
 }
@@ -215,6 +257,20 @@ async function seedProducts(products) {
   }
 }
 
+async function seedSiteSettings() {
+  const now = new Date().toISOString()
+  await execute(
+    `
+      INSERT INTO site_settings (setting_key, value_json, created_at, updated_at)
+      VALUES (?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        value_json = VALUES(value_json),
+        updated_at = VALUES(updated_at)
+    `,
+    ['home_page_content', JSON.stringify(createDefaultHomePageContent()), now, now]
+  )
+}
+
 async function main() {
   const [admins, brands, products] = await Promise.all([
     readJsonFile('admins.json'),
@@ -228,6 +284,7 @@ async function main() {
   await seedAdmins(admins)
   await seedBrands(brands)
   await seedProducts(products)
+  await seedSiteSettings()
 
   console.log(`数据库 ${databaseName} 已完成初始化，管理员 ${admins.length} 条，品牌 ${brands.length} 条，商品 ${products.length} 条。`)
 }

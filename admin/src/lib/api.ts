@@ -3,6 +3,7 @@ import type {
   AdminProfile,
   Brand,
   BrandForm,
+  HomePageContent,
   LoginForm,
   PasswordForm,
   Product,
@@ -230,4 +231,26 @@ export async function uploadAdminImages(token: string, files: File[] | FileList,
 
   await ensureResponse(response, '上传图片失败')
   return parseJson<{ urls: string[] }>(response)
+}
+
+export async function fetchAdminSiteContent(token: string) {
+  const response = await fetch(`${API_BASE_URL}/admin/site-content`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  await ensureResponse(response, '加载官网首页配置失败')
+  return parseJson<HomePageContent>(response)
+}
+
+export async function updateAdminSiteContent(token: string, form: HomePageContent) {
+  const response = await fetch(`${API_BASE_URL}/admin/site-content`, {
+    method: 'PUT',
+    headers: createHeaders(token),
+    body: JSON.stringify(form)
+  })
+
+  await ensureResponse(response, '保存官网首页配置失败')
+  return parseJson<HomePageContent>(response)
 }

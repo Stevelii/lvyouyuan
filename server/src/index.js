@@ -12,6 +12,7 @@ const PORT = Number(process.env.PORT ?? 8507)
 const DEFAULT_PASSWORD = '111111'
 const MOBILE_PHONE_REGEX = /^1\d{10}$/
 const DETAIL_SECTION_TYPES = new Set(['text', 'richtext', 'image', 'video', 'gallery', 'features', 'specs', 'downloads', 'quote'])
+const HOME_PAGE_SETTINGS_KEY = 'home_page_content'
 const sessions = new Map()
 const serverRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const uploadsRoot = path.join(serverRoot, 'uploads')
@@ -89,6 +90,39 @@ function sanitizeAdmin(admin) {
     createdAt: admin.createdAt,
     updatedAt: admin.updatedAt,
     lastLoginAt: admin.lastLoginAt ?? null
+  }
+}
+
+function createDefaultHomePageContent() {
+  return {
+    heroEyebrow: 'From Brand To Product',
+    heroTitle: '绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。',
+    heroDescription:
+      '我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。',
+    primaryActionLabel: '查看品牌',
+    secondaryActionLabel: '查看商品',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    cards: [
+      {
+        id: 'hero-card-1',
+        image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '品牌样张',
+        title: '品牌主视觉卡片'
+      },
+      {
+        id: 'hero-card-2',
+        image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '商品表达',
+        title: '商品卖点组合展示'
+      },
+      {
+        id: 'hero-card-3',
+        image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '图文详情',
+        title: '详情内容封面卡片'
+      }
+    ]
   }
 }
 
@@ -340,6 +374,33 @@ function normalizeProduct(input, existing = {}) {
   }
 }
 
+function normalizeHomePageContent(input = {}, existing = createDefaultHomePageContent()) {
+  const defaults = createDefaultHomePageContent()
+  const incomingCards = Array.isArray(input.cards) ? input.cards : []
+  const existingCards = Array.isArray(existing.cards) ? existing.cards : defaults.cards
+
+  return {
+    heroEyebrow: String(input.heroEyebrow ?? existing.heroEyebrow ?? defaults.heroEyebrow).trim(),
+    heroTitle: String(input.heroTitle ?? existing.heroTitle ?? defaults.heroTitle).trim(),
+    heroDescription: String(input.heroDescription ?? existing.heroDescription ?? defaults.heroDescription).trim(),
+    primaryActionLabel: String(input.primaryActionLabel ?? existing.primaryActionLabel ?? defaults.primaryActionLabel).trim(),
+    secondaryActionLabel: String(input.secondaryActionLabel ?? existing.secondaryActionLabel ?? defaults.secondaryActionLabel).trim(),
+    backgroundImage: String(input.backgroundImage ?? existing.backgroundImage ?? defaults.backgroundImage).trim(),
+    cards: Array.from({ length: 3 }, (_, index) => {
+      const fallbackCard = defaults.cards[index]
+      const existingCard = existingCards[index] ?? fallbackCard
+      const incomingCard = incomingCards[index] ?? {}
+
+      return {
+        id: String(incomingCard.id ?? existingCard.id ?? fallbackCard.id).trim() || fallbackCard.id,
+        image: String(incomingCard.image ?? existingCard.image ?? fallbackCard.image).trim(),
+        eyebrow: String(incomingCard.eyebrow ?? existingCard.eyebrow ?? fallbackCard.eyebrow).trim(),
+        title: String(incomingCard.title ?? existingCard.title ?? fallbackCard.title).trim()
+      }
+    })
+  }
+}
+
 function validateBrand(brand) {
   const requiredFields = ['name', 'slogan', 'description', 'coverImage']
   const missingField = requiredFields.find((field) => !brand[field])
@@ -416,6 +477,26 @@ function validateProduct(product, brands) {
   return validateDetailSections(product.detailSections)
 }
 
+function validateHomePageContent(content) {
+  if (!content.heroTitle) {
+    return '首页主标题不能为空'
+  }
+
+  if (!content.heroDescription) {
+    return '首页说明文案不能为空'
+  }
+
+  if (!content.backgroundImage) {
+    return '首页背景图不能为空'
+  }
+
+  if (!Array.isArray(content.cards) || content.cards.length !== 3) {
+    return '首页主视觉需要保留 3 张卡片'
+  }
+
+  return null
+}
+
 function hydrateBrands(brands) {
   return sortBrands(brands)
 }
@@ -443,6 +524,19 @@ function parseJsonField(raw, fallback) {
   try {
     const parsed = JSON.parse(raw)
     return Array.isArray(parsed) ? parsed : fallback
+  } catch {
+    return fallback
+  }
+}
+
+function parseJsonObject(raw, fallback) {
+  if (!raw) {
+    return fallback
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : fallback
   } catch {
     return fallback
   }
@@ -502,6 +596,14 @@ function mapProductRow(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at
   }
+}
+
+function mapSiteSettingRow(row) {
+  if (!row) {
+    return createDefaultHomePageContent()
+  }
+
+  return normalizeHomePageContent(parseJsonObject(row.value_json, createDefaultHomePageContent()))
 }
 
 async function fetchAdminByPhone(phone) {
@@ -639,6 +741,54 @@ async function fetchProductById(id) {
   return row ? mapProductRow(row) : null
 }
 
+async function ensureSiteSettingsTable() {
+  await execute(`
+    CREATE TABLE IF NOT EXISTS site_settings (
+      setting_key VARCHAR(128) PRIMARY KEY,
+      value_json LONGTEXT NOT NULL,
+      created_at VARCHAR(40) NOT NULL,
+      updated_at VARCHAR(40) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `)
+}
+
+async function ensureDefaultSiteContent() {
+  const now = new Date().toISOString()
+  const existing = await queryOne('SELECT setting_key FROM site_settings WHERE setting_key = ? LIMIT 1', [HOME_PAGE_SETTINGS_KEY])
+
+  if (existing) {
+    return
+  }
+
+  await execute(
+    `
+      INSERT INTO site_settings (setting_key, value_json, created_at, updated_at)
+      VALUES (?, ?, ?, ?)
+    `,
+    [HOME_PAGE_SETTINGS_KEY, JSON.stringify(createDefaultHomePageContent()), now, now]
+  )
+}
+
+async function fetchHomePageContent() {
+  const row = await queryOne('SELECT * FROM site_settings WHERE setting_key = ? LIMIT 1', [HOME_PAGE_SETTINGS_KEY])
+  return mapSiteSettingRow(row)
+}
+
+async function updateHomePageContent(content) {
+  const now = new Date().toISOString()
+
+  await execute(
+    `
+      INSERT INTO site_settings (setting_key, value_json, created_at, updated_at)
+      VALUES (?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        value_json = VALUES(value_json),
+        updated_at = VALUES(updated_at)
+    `,
+    [HOME_PAGE_SETTINGS_KEY, JSON.stringify(content), now, now]
+  )
+}
+
 async function insertProduct(product) {
   await execute(
     `
@@ -709,6 +859,11 @@ app.get('/api/health', async (_request, response) => {
 app.get('/api/brands', async (_request, response) => {
   const brands = await fetchBrands()
   response.json(hydrateBrands(brands.filter((brand) => brand.isVisible)))
+})
+
+app.get('/api/site-content', async (_request, response) => {
+  const content = await fetchHomePageContent()
+  response.json(content)
 })
 
 app.get('/api/products', async (_request, response) => {
@@ -912,6 +1067,25 @@ app.get('/api/admin/brands', requireAdmin, async (_request, response) => {
   response.json(hydrateBrands(brands))
 })
 
+app.get('/api/admin/site-content', requireAdmin, async (_request, response) => {
+  const content = await fetchHomePageContent()
+  response.json(content)
+})
+
+app.put('/api/admin/site-content', requireAdmin, async (request, response) => {
+  const currentContent = await fetchHomePageContent()
+  const nextContent = normalizeHomePageContent(request.body, currentContent)
+  const validationError = validateHomePageContent(nextContent)
+
+  if (validationError) {
+    response.status(400).json({ message: validationError })
+    return
+  }
+
+  await updateHomePageContent(nextContent)
+  response.json(nextContent)
+})
+
 app.post('/api/admin/brands', requireAdmin, async (request, response) => {
   const brands = await fetchBrands()
   const nextBrand = normalizeBrand(request.body, {
@@ -1047,6 +1221,16 @@ app.use((error, _request, response, _next) => {
   })
 })
 
-app.listen(PORT, () => {
-  console.log(`绿优源 API 已连接数据库 ${databaseName}：http://localhost:${PORT}/api`)
+async function startServer() {
+  await ensureSiteSettingsTable()
+  await ensureDefaultSiteContent()
+
+  app.listen(PORT, () => {
+    console.log(`绿优源 API 已连接数据库 ${databaseName}：http://localhost:${PORT}/api`)
+  })
+}
+
+startServer().catch((error) => {
+  console.error('服务启动失败:', error)
+  process.exit(1)
 })

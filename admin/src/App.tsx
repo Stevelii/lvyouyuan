@@ -10,11 +10,13 @@ import {
   deleteProduct,
   fetchAdminBrands,
   fetchAdminProducts,
+  fetchAdminSiteContent,
   fetchAdminUsers,
   fetchCurrentAdmin,
   loginAdmin,
   logoutAdmin,
   uploadAdminImages,
+  updateAdminSiteContent,
   updateBrand,
   updateProduct
 } from './lib/api'
@@ -23,6 +25,7 @@ import type {
   AdminProfile,
   Brand,
   BrandForm,
+  HomePageContent,
   LoginForm,
   PasswordForm,
   Product,
@@ -175,6 +178,39 @@ function createEmptyAdminUserForm(): AdminUserForm {
     password: DEFAULT_PASSWORD,
     mustChangePassword: true,
     isSystemAdmin: false
+  }
+}
+
+function createDefaultHomePageContent(): HomePageContent {
+  return {
+    heroEyebrow: 'From Brand To Product',
+    heroTitle: '绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。',
+    heroDescription:
+      '我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。',
+    primaryActionLabel: '查看品牌',
+    secondaryActionLabel: '查看商品',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    cards: [
+      {
+        id: 'hero-card-1',
+        image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '品牌样张',
+        title: '品牌主视觉卡片'
+      },
+      {
+        id: 'hero-card-2',
+        image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '商品表达',
+        title: '商品卖点组合展示'
+      },
+      {
+        id: 'hero-card-3',
+        image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=900&q=80',
+        eyebrow: '图文详情',
+        title: '详情内容封面卡片'
+      }
+    ]
   }
 }
 
@@ -388,9 +424,10 @@ function App() {
   const [products, setProducts] = useState<Product[]>([])
   const [brands, setBrands] = useState<Brand[]>([])
   const [users, setUsers] = useState<AdminProfile[]>([])
-  const [activeSection, setActiveSection] = useState<'products' | 'brands' | 'users'>('products')
+  const [activeSection, setActiveSection] = useState<'products' | 'brands' | 'site' | 'users'>('products')
   const [productForm, setProductForm] = useState<ProductForm>(createEmptyProductForm([], 1))
   const [brandForm, setBrandForm] = useState<BrandForm>(createEmptyBrandForm())
+  const [siteContentForm, setSiteContentForm] = useState<HomePageContent>(createDefaultHomePageContent())
   const [userForm, setUserForm] = useState<AdminUserForm>(createEmptyAdminUserForm())
   const [passwordForm, setPasswordForm] = useState<PasswordForm>(createEmptyPasswordForm())
   const [loginForm, setLoginForm] = useState<LoginForm>({ phone: '', password: DEFAULT_PASSWORD })
@@ -417,9 +454,10 @@ function App() {
     async function bootstrap() {
       try {
         const profile = await fetchCurrentAdmin(token)
-        const [nextProducts, nextBrands, nextUsers] = await Promise.all([
+        const [nextProducts, nextBrands, nextSiteContent, nextUsers] = await Promise.all([
           fetchAdminProducts(token),
           fetchAdminBrands(token),
+          fetchAdminSiteContent(token),
           profile.isSystemAdmin ? fetchAdminUsers(token) : Promise.resolve([])
         ])
 
@@ -431,6 +469,7 @@ function App() {
           setAdmin(profile)
           setProducts(nextProducts)
           setBrands(nextBrands)
+          setSiteContentForm(nextSiteContent)
           setUsers(nextUsers)
           setLoading(false)
           setAuthLoading(false)
@@ -533,17 +572,18 @@ function App() {
     productId?: string
     brandId?: string
     userId?: string
-    preferSection?: 'products' | 'brands' | 'users'
+    preferSection?: 'products' | 'brands' | 'site' | 'users'
   }) {
     if (!token) {
       return
     }
 
     try {
-      const [profile, nextProducts, nextBrands] = await Promise.all([
+      const [profile, nextProducts, nextBrands, nextSiteContent] = await Promise.all([
         fetchCurrentAdmin(token),
         fetchAdminProducts(token),
-        fetchAdminBrands(token)
+        fetchAdminBrands(token),
+        fetchAdminSiteContent(token)
       ])
       const nextUsers = profile.isSystemAdmin ? await fetchAdminUsers(token) : []
 
@@ -551,6 +591,7 @@ function App() {
         setAdmin(profile)
         setProducts(nextProducts)
         setBrands(nextBrands)
+        setSiteContentForm(nextSiteContent)
         setUsers(nextUsers)
         setLoading(false)
       })
@@ -691,6 +732,26 @@ function App() {
     )
   }
 
+  async function handleUploadSiteImage(
+    files: File[],
+    updater: (url: string) => void,
+    subdir: string,
+    successMessage: string
+  ) {
+    await uploadImagesAndApply(
+      files,
+      subdir,
+      (urls) => {
+        const nextUrl = urls[0] ?? ''
+
+        if (nextUrl) {
+          updater(nextUrl)
+        }
+      },
+      successMessage
+    )
+  }
+
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setSaving(true)
@@ -775,6 +836,17 @@ function App() {
     setUserForm((current) => ({ ...current, [field]: value }))
   }
 
+  function updateSiteContentForm<K extends keyof HomePageContent>(field: K, value: HomePageContent[K]) {
+    setSiteContentForm((current) => ({ ...current, [field]: value }))
+  }
+
+  function updateSiteCard(index: number, updater: (card: HomePageContent['cards'][number]) => HomePageContent['cards'][number]) {
+    setSiteContentForm((current) => ({
+      ...current,
+      cards: current.cards.map((card, currentIndex) => (currentIndex === index ? updater(card) : card))
+    }))
+  }
+
   function handleSelectProduct(product: Product) {
     setSelectedProductId(product.id)
     setProductForm(toProductForm(product))
@@ -801,6 +873,12 @@ function App() {
     setBrandForm(createEmptyBrandForm(brands.length + 1))
     setActiveSection('brands')
     setStatus('已切换到新建品牌表单')
+  }
+
+  function handleResetSiteContent() {
+    setSiteContentForm(createDefaultHomePageContent())
+    setActiveSection('site')
+    setStatus('已恢复默认首页主视觉表单，可直接修改后保存')
   }
 
   function handleCreateNewUser() {
@@ -920,6 +998,26 @@ function App() {
       setStatus(`后台账号 ${saved.phone} 已创建`)
     } catch (error) {
       handleApiError(error, '新增后台账号失败')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleSubmitSiteContent(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (!token) {
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      const saved = await updateAdminSiteContent(token, siteContentForm)
+      setSiteContentForm(saved)
+      setStatus('官网首页主视觉已更新')
+    } catch (error) {
+      handleApiError(error, '保存官网首页配置失败')
     } finally {
       setSaving(false)
     }
@@ -1174,6 +1272,13 @@ function App() {
           >
             品牌管理
           </button>
+          <button
+            className={`switcher-button ${activeSection === 'site' ? 'switcher-button--active' : ''}`}
+            onClick={() => setActiveSection('site')}
+            type="button"
+          >
+            官网首页
+          </button>
           {admin.isSystemAdmin ? (
             <button
               className={`switcher-button ${activeSection === 'users' ? 'switcher-button--active' : ''}`}
@@ -1186,18 +1291,22 @@ function App() {
         </div>
 
         <div className="sidebar-toolbar">
-          <input
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder={
-              activeSection === 'products'
-                ? '搜索商品、品牌、分类'
-                : activeSection === 'brands'
-                  ? '搜索品牌名称或品牌口号'
-                  : '搜索手机号或管理员类型'
-            }
-            type="search"
-          />
+          {activeSection !== 'site' ? (
+            <input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder={
+                activeSection === 'products'
+                  ? '搜索商品、品牌、分类'
+                  : activeSection === 'brands'
+                    ? '搜索品牌名称或品牌口号'
+                    : '搜索手机号或管理员类型'
+              }
+              type="search"
+            />
+          ) : (
+            <p className="empty-note">这里维护官网首页首屏主视觉，包括主标题、说明文案和右侧图片卡片。</p>
+          )}
           {activeSection === 'products' ? (
             <button className="button-primary" onClick={handleCreateNewProduct} type="button">
               新建商品
@@ -1211,6 +1320,11 @@ function App() {
           {activeSection === 'users' && admin.isSystemAdmin ? (
             <button className="button-primary" onClick={handleCreateNewUser} type="button">
               新建用户
+            </button>
+          ) : null}
+          {activeSection === 'site' ? (
+            <button className="button-primary" onClick={handleResetSiteContent} type="button">
+              恢复默认内容
             </button>
           ) : null}
         </div>
@@ -1228,6 +1342,17 @@ function App() {
 
           {!loading && activeSection === 'users' && filteredUsers.length === 0 ? (
             <p className="empty-note">没有匹配到后台用户</p>
+          ) : null}
+
+          {!loading && activeSection === 'site' ? (
+            <article className="product-row product-row--active">
+              <img src={siteContentForm.backgroundImage} alt="官网首页主视觉" />
+              <div>
+                <strong>官网首页首屏</strong>
+                <span>{siteContentForm.heroEyebrow || '主视觉眉题'}</span>
+                <small>左侧文字 + 右侧背景图与三张浮动卡片</small>
+              </div>
+            </article>
           ) : null}
 
           {activeSection === 'products'
@@ -1346,7 +1471,7 @@ function App() {
         <header className="main-header">
           <div>
             <p className="sidebar-label">
-              {activeSection === 'products' ? '商品编辑区' : activeSection === 'brands' ? '品牌编辑区' : '用户管理区'}
+              {activeSection === 'products' ? '商品编辑区' : activeSection === 'brands' ? '品牌编辑区' : activeSection === 'site' ? '官网首页配置区' : '用户管理区'}
             </p>
             <h2>
               {activeSection === 'products'
@@ -1357,6 +1482,8 @@ function App() {
                   ? brandForm.id
                     ? '编辑品牌'
                     : '新建品牌'
+                  : activeSection === 'site'
+                    ? '编辑官网首页首屏'
                   : '新增后台用户'}
             </h2>
           </div>
@@ -2033,6 +2160,203 @@ function App() {
                     <p>{brandForm.description || '这里会显示品牌介绍，方便运营同事预览官网品牌卡片内容。'}</p>
                   </div>
                 </div>
+              </section>
+            </>
+          ) : activeSection === 'site' ? (
+            <>
+              <form className="editor-panel" onSubmit={handleSubmitSiteContent}>
+                <div className="field-grid">
+                  <label>
+                    眉题文案
+                    <input
+                      required
+                      value={siteContentForm.heroEyebrow}
+                      onChange={(event) => updateSiteContentForm('heroEyebrow', event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    主按钮文字
+                    <input
+                      required
+                      value={siteContentForm.primaryActionLabel}
+                      onChange={(event) => updateSiteContentForm('primaryActionLabel', event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    次按钮文字
+                    <input
+                      required
+                      value={siteContentForm.secondaryActionLabel}
+                      onChange={(event) => updateSiteContentForm('secondaryActionLabel', event.target.value)}
+                    />
+                  </label>
+                </div>
+
+                <label>
+                  首页主标题
+                  <textarea
+                    required
+                    rows={4}
+                    value={siteContentForm.heroTitle}
+                    onChange={(event) => updateSiteContentForm('heroTitle', event.target.value)}
+                  />
+                </label>
+
+                <label>
+                  首页说明文案
+                  <textarea
+                    required
+                    rows={4}
+                    value={siteContentForm.heroDescription}
+                    onChange={(event) => updateSiteContentForm('heroDescription', event.target.value)}
+                  />
+                </label>
+
+                <label>
+                  右侧背景图 URL
+                  <input
+                    required
+                    value={siteContentForm.backgroundImage}
+                    onChange={(event) => updateSiteContentForm('backgroundImage', event.target.value)}
+                  />
+                </label>
+                <div className="upload-actions">
+                  <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                    上传背景图
+                    <input
+                      accept="image/*"
+                      disabled={saving}
+                      type="file"
+                      onChange={(event) => {
+                        const files = getSelectedFiles(event)
+                        void handleUploadSiteImage(
+                          files,
+                          (url) => updateSiteContentForm('backgroundImage', url),
+                          'site/hero',
+                          '首页背景图已上传并写入表单'
+                        )
+                      }}
+                    />
+                  </label>
+                  <span className="field-tip">这张图会作为首页首屏右侧大面积背景图。</span>
+                </div>
+
+                <section className="detail-editor">
+                  <div className="detail-editor__header">
+                    <div>
+                      <p className="sidebar-label">浮动卡片</p>
+                      <h3>右侧 3 张图文卡片</h3>
+                    </div>
+                  </div>
+                  <div className="detail-editor__list">
+                    {siteContentForm.cards.map((card, index) => (
+                      <article className="detail-editor__card" key={card.id}>
+                        <strong>卡片 {index + 1}</strong>
+                        <label>
+                          卡片图片 URL
+                          <input
+                            required
+                            value={card.image}
+                            onChange={(event) =>
+                              updateSiteCard(index, (current) => ({
+                                ...current,
+                                image: event.target.value
+                              }))
+                            }
+                          />
+                        </label>
+                        <div className="upload-actions">
+                          <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                            上传卡片图片
+                            <input
+                              accept="image/*"
+                              disabled={saving}
+                              type="file"
+                              onChange={(event) => {
+                                const files = getSelectedFiles(event)
+                                void handleUploadSiteImage(
+                                  files,
+                                  (url) =>
+                                    updateSiteCard(index, (current) => ({
+                                      ...current,
+                                      image: url
+                                    })),
+                                  `site/cards`,
+                                  `卡片 ${index + 1} 图片已上传`
+                                )
+                              }}
+                            />
+                          </label>
+                          <span className="field-tip">建议用清晰的品牌图、商品图或氛围图。</span>
+                        </div>
+                        <label>
+                          小标题
+                          <input
+                            required
+                            value={card.eyebrow}
+                            onChange={(event) =>
+                              updateSiteCard(index, (current) => ({
+                                ...current,
+                                eyebrow: event.target.value
+                              }))
+                            }
+                          />
+                        </label>
+                        <label>
+                          主标题
+                          <input
+                            required
+                            value={card.title}
+                            onChange={(event) =>
+                              updateSiteCard(index, (current) => ({
+                                ...current,
+                                title: event.target.value
+                              }))
+                            }
+                          />
+                        </label>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <div className="form-actions">
+                  <button className="button-primary" disabled={saving} type="submit">
+                    {saving ? '保存中...' : '保存首页配置'}
+                  </button>
+                  <button className="button-secondary" onClick={handleResetSiteContent} type="button">
+                    重置为默认
+                  </button>
+                </div>
+              </form>
+
+              <section className="preview-panel">
+                <p className="sidebar-label">首页首屏预览</p>
+                <article
+                  className="site-hero-preview"
+                  style={{ '--hero-preview-image': `url("${siteContentForm.backgroundImage}")` } as CSSProperties}
+                >
+                  <div className="site-hero-preview__copy">
+                    <p className="sidebar-label">{siteContentForm.heroEyebrow}</p>
+                    <h3>{siteContentForm.heroTitle}</h3>
+                    <p>{siteContentForm.heroDescription}</p>
+                    <div className="hero-actions">
+                      <span className="button-primary">{siteContentForm.primaryActionLabel}</span>
+                      <span className="button-secondary">{siteContentForm.secondaryActionLabel}</span>
+                    </div>
+                  </div>
+                  <div className="site-hero-preview__visual">
+                    {siteContentForm.cards.map((card, index) => (
+                      <article className={`site-hero-preview__card site-hero-preview__card--${index + 1}`} key={card.id}>
+                        {card.image ? <img src={card.image} alt={card.title} /> : null}
+                        <div>
+                          <span>{card.eyebrow}</span>
+                          <strong>{card.title}</strong>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </article>
               </section>
             </>
           ) : (
