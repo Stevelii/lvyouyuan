@@ -361,6 +361,11 @@ img {
   line-height: 1.08;
 }
 
+#products .section-heading h2 {
+  font-weight: 700;
+  color: #1f2a17;
+}
+
 .section-note {
   max-width: 28rem;
 }

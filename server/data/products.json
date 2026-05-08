@@ -308,10 +308,10 @@
     "name": "红油泡椒脆笋",
     "category": "休闲零食",
     "origin": "广东清远英德",
-    "priceLabel": "¥11.72 / 拼购价",
-    "description": "当前商品页展示为清马同款脆笋，主打红油泡椒风味。商品长图可见产地为广东清远英德，页面可见品牌为清农投，规格为 640g 袋装，脆嫩开袋即食，也适合拌饭下饭。",
-    "image": "/pdd-red-oil-bamboo-shoots.jpg",
-    "badge": "拼多多热卖",
+    "priceLabel": "参考价 ¥11.72",
+    "description": "红油泡椒脆笋主打鲜嫩爽脆与红油椒香，规格为 640g 袋装，开袋即食，也适合作为佐餐和休闲零食。品牌为清农投，产地信息为广东清远英德。",
+    "image": "/pdd-red-oil-bamboo-shoots-hero-ai.png",
+    "badge": "热销单品",
     "highlights": [
       "红油泡椒风味",
       "640g 袋装",
@@ -321,15 +321,22 @@
       {
         "id": "bamboo-hero-image",
         "type": "image",
-        "title": "商品主图",
-        "image": "/pdd-red-oil-bamboo-shoots.jpg",
-        "caption": "从模拟器中的拼多多商品页截取，展示红油脆笋包装、食用状态与即食场景。"
+        "title": "商品主视觉",
+        "image": "/pdd-red-oil-bamboo-shoots-hero-ai.png",
+        "caption": "根据产品包装色彩、红油风味和即食佐餐场景重新生成，作为官网主视觉展示。"
       },
       {
         "id": "bamboo-page-summary",
         "type": "richtext",
-        "title": "页面提取信息",
-        "content": "当前页可读商品名：清马同款脆笋新鲜西牛麻红油泡椒脆笋零食解馋即食整箱开袋。\n\n- 当前拼购价：¥11.72\n- 原拼单价：¥21.9\n- 页面提示：已抢 1.5 万+ 包，即将卖完\n- 当前页展示：45 人在拼，商品评价 948 条\n- 店铺名称：乐都百货店\n- 页面抬头信息：店铺热销榜第 1 名"
+        "title": "产品概览",
+        "content": "红油泡椒脆笋采用袋装即食形态，适合佐餐、拌饭和休闲零食场景。\n\n- 规格：640g 袋装\n- 风味：红油泡椒风味\n- 口感：脆嫩爽口，酸香微辣\n- 食用方式：开袋即食"
+      },
+      {
+        "id": "bamboo-closeup-image",
+        "type": "image",
+        "title": "口感细节图",
+        "image": "/pdd-red-oil-bamboo-shoots-closeup-ai.png",
+        "caption": "突出脆笋嫩尖、红油包裹感和偏清爽的辣度印象，用于替代原先的近景截图。"
       },
       {
         "id": "bamboo-features",
@@ -338,20 +345,24 @@
         "items": [
           "脆笋口感偏脆嫩，适合开袋即食，也适合拌饭下饭",
           "整体辣度不高，酸香更突出，适合更广人群",
-          "页面评论里多次提到分量足、复购高、口味更偏红油款",
-          "长图里反复强调鲜嫩脆爽、深层入味和泡椒风味"
+          "消费者反馈普遍认可红油风味，复购意愿较高",
+          "产品卖点集中在鲜嫩脆爽、深层入味和即食便利性"
         ]
+      },
+      {
+        "id": "bamboo-detail-image",
+        "type": "image",
+        "title": "详情页氛围图",
+        "image": "/pdd-red-oil-bamboo-shoots-detail-ai.png",
+        "caption": "纵向详情图保留袋装、即食和佐餐气质，更适合官网详情页排版。"
       },
       {
         "id": "bamboo-specs",
         "type": "specs",
-        "title": "规格与渠道信息",
+        "title": "规格信息",
         "specs": [
-          { "label": "当前渠道", "value": "拼多多商品页" },
           { "label": "品牌", "value": "清农投" },
-          { "label": "当前到手价", "value": "¥11.72（页面活动价）" },
-          { "label": "单独购买价", "value": "¥23.9" },
-          { "label": "店铺", "value": "乐都百货店" },
+          { "label": "参考价", "value": "¥11.72" },
           { "label": "净含量", "value": "640g" },
           { "label": "包装方式", "value": "袋装" },
           { "label": "商品产地", "value": "清远英德" },
@@ -365,36 +376,28 @@
         ]
       },
       {
-        "id": "bamboo-gallery",
-        "type": "gallery",
-        "title": "页面截图补充",
-        "images": [
-          "/pdd-red-oil-bamboo-shoots-banner.png",
-          "/pdd-red-oil-bamboo-shoots-specs.png",
-          "/pdd-red-oil-bamboo-shoots-reviews.png",
-          "/pdd-deep-3.jpg",
-          "/pdd-deep-4.jpg",
-          "/pdd-deep-8.jpg"
-        ],
-        "caption": "补齐 banner、规格区、评价区和长图详情区，避免官网只依赖单张主图。"
-      },
-      {
         "id": "bamboo-review-quote",
         "type": "quote",
         "quote": "我感觉红油的要比泡椒的好吃，而且不怎么辣，笋也特别嫩。",
-        "author": "商品评价摘录"
+        "author": "用户反馈摘录"
       },
       {
         "id": "bamboo-review-richtext",
         "type": "richtext",
-        "title": "评价页补充摘录",
-        "content": "- 评价页可见口味选项：热销款 15包+赠送1包 混合口味袋装\n- 评价页另有用户反馈：超值实惠装 40包红油口味\n- 评价关键词集中在：好吃、笋很嫩、分量多、质量软、价格合理\n- 商品长图可见：泡椒脆笋、红油脆笋两种风味方向都在页面里出现"
+        "title": "消费者反馈摘要",
+        "content": "- 消费者反馈集中在：红油风味更讨喜、辣度适中、笋体细嫩、适合日常佐餐\n- 典型评价关键词：好吃、脆嫩、分量足、复购意愿高\n- 适合即食、配饭、宵夜小菜等多种食用场景"
       },
       {
         "id": "bamboo-ingredient-richtext",
         "type": "richtext",
-        "title": "长图提取的配料与营养信息",
-        "content": "- 配料表可见：竹笋、辣椒油（植物油、辣椒）、食用盐、白砂糖、食品添加剂、食用香精香料\n- 营养成分表（每100克）：能量 275千焦，蛋白质 1.4克，脂肪 4.0克，碳水化合物 4.1克，钠 2075毫克\n- 长图文案：来自深山的美味、鲜嫩脆爽、深层入味、色泽明亮"
+        "title": "配料与营养信息",
+        "content": "- 配料表：竹笋、辣椒油（植物油、辣椒）、食用盐、白砂糖、食品添加剂、食用香精香料\n- 营养成分表（每100克）：能量 275千焦，蛋白质 1.4克，脂肪 4.0克，碳水化合物 4.1克，钠 2075毫克\n- 产品风味特征：鲜嫩脆爽、红油椒香、入口清脆"
+      },
+      {
+        "id": "bamboo-factory-richtext",
+        "type": "richtext",
+        "title": "生产与储运说明",
+        "content": "- 产品资料中包含标准化厂房、洁净车间、自动化生产线与智能化冷库等生产信息\n- 建议置于阴凉干燥处保存，避免阳光直射\n- 适合作为品牌展示、渠道选品和供应合作中的单品介绍"
       }
     ],
     "isFeatured": false,
@@ -402,5 +405,95 @@
     "sortOrder": 7,
     "createdAt": "2026-04-24T00:00:00.000Z",
     "updatedAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "qingyuan-maji-008",
+    "brandId": "hualancai",
+    "name": "清远麻鸡",
+    "category": "生鲜禽肉",
+    "origin": "广东清远",
+    "priceLabel": "参考价 ¥109",
+    "description": "广东清远麻鸡为地理标志鸡种，血统纯正，林木间足期散养 180 天以上，饮山泉、食五谷与昆虫蛋白，肉质紧实弹韧、鲜味浓郁，适合炖汤、白切和家宴整鸡展示。",
+    "image": "/qingyuan-maji-subject-original.png",
+    "badge": "地标名鸡",
+    "highlights": [
+      "180天以上山林散养",
+      "山泉直饮 五谷喂养",
+      "皮爽肉滑 骨透香"
+    ],
+    "detailSections": [
+      {
+        "id": "maji-hero-image",
+        "type": "image",
+        "title": "商品主体展示",
+        "image": "/qingyuan-maji-subject-original.png",
+        "caption": "截自原始详情页中的活鸡与净鸡同框画面，直接展示清远麻鸡的品种形态与商品状态。"
+      },
+      {
+        "id": "maji-overview",
+        "type": "richtext",
+        "title": "产品概览",
+        "content": "清远麻鸡适合炖汤、白切和节庆家宴使用，详情内容围绕地标品种、生态放养和成品风味展开。\n\n- 品类：清远麻鸡 / 生鲜整鸡\n- 品牌：华篮彩\n- 净含量：1100g\n- 原产地：广东清远\n- 放养方式：林木间足期散养 180 天以上"
+      },
+      {
+        "id": "maji-detail-long-image",
+        "type": "image",
+        "title": "原始详情长图",
+        "image": "/qingyuan-maji-detail-long-original.png",
+        "caption": "由原始详情页素材连续拼接而成，包含主体展示、成品风味、产地故事、生态养殖与饲粮配方。"
+      },
+      {
+        "id": "maji-features",
+        "type": "features",
+        "title": "核心卖点",
+        "items": [
+          "清远鸡为国家地理标志产品，详情页强调血统纯正与千年饮食文化背景",
+          "林木间足期放养 180 天以上，饮山泉、食五谷，肉质紧实弹韧、鲜味浓郁",
+          "经典风味描述为皮爽肉滑骨透香，适合白切、炖汤与家宴整鸡场景",
+          "整鸡规格清晰，适合供应展示、渠道选品与节庆礼赠介绍"
+        ]
+      },
+      {
+        "id": "maji-specs",
+        "type": "specs",
+        "title": "规格信息",
+        "specs": [
+          { "label": "品牌", "value": "华篮彩" },
+          { "label": "参考价", "value": "¥109" },
+          { "label": "单只购买参考", "value": "¥140" },
+          { "label": "净含量", "value": "1100g" },
+          { "label": "原产地", "value": "广东清远" },
+          { "label": "发货地", "value": "深圳" },
+          { "label": "放养周期", "value": "180天以上" },
+          { "label": "喂养方式", "value": "山泉直饮，五谷与昆虫蛋白喂养" },
+          { "label": "商品形态", "value": "冰鲜整鸡" },
+          { "label": "物流方式", "value": "顺丰冷链" },
+          { "label": "售后说明", "value": "坏损包赔" }
+        ]
+      },
+      {
+        "id": "maji-review-quote",
+        "type": "quote",
+        "quote": "汤清味美，炖汤极佳，收拾得很干净。",
+        "author": "用户反馈摘录"
+      },
+      {
+        "id": "maji-review-summary",
+        "type": "richtext",
+        "title": "消费者反馈摘要",
+        "content": "- 可见反馈集中在：汤清味美、炖汤极佳、处理较干净\n- 评价关键词包括：质量好、品质不错、新鲜、好吃\n- 适合作为家常炖汤、白切整鸡和节庆宴席食材展示"
+      },
+      {
+        "id": "maji-delivery",
+        "type": "richtext",
+        "title": "履约与供应说明",
+        "content": "- 当前资料显示支持顺丰冷链，适合冰鲜整鸡跨区域履约\n- 现有问答信息可见发货地为深圳\n- 可作为供应展示中的地标鸡种单品，用于渠道选品、餐饮合作和节庆礼盒沟通"
+      }
+    ],
+    "isFeatured": false,
+    "isPublished": true,
+    "sortOrder": 8,
+    "createdAt": "2026-04-27T00:00:00.000Z",
+    "updatedAt": "2026-04-27T00:00:00.000Z"
   }
 ]
