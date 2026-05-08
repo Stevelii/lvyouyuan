@@ -685,7 +685,7 @@ function App() {
   async function handleUploadProductImage(files: File[]) {
     await uploadImagesAndApply(
       files,
-      'website/products',
+      'products',
       (urls) => {
         updateProductForm('image', urls[0] ?? '')
       },
@@ -696,7 +696,7 @@ function App() {
   async function handleUploadBrandImage(files: File[]) {
     await uploadImagesAndApply(
       files,
-      'website/brands',
+      'brands',
       (urls) => {
         updateBrandForm('coverImage', urls[0] ?? '')
       },
@@ -707,7 +707,7 @@ function App() {
   async function handleUploadDetailImage(sectionId: string, field: 'image' | 'posterImage', files: File[]) {
     await uploadImagesAndApply(
       files,
-      field === 'posterImage' ? 'website/products/posters' : 'website/products/details',
+      field === 'posterImage' ? 'products/posters' : 'products/details',
       (urls) => {
         handleUpdateDetailSection(sectionId, (current) => ({
           ...current,
@@ -721,7 +721,7 @@ function App() {
   async function handleUploadGalleryImages(sectionId: string, files: File[]) {
     await uploadImagesAndApply(
       files,
-      'website/products/gallery',
+      'products/gallery',
       (urls) => {
         handleUpdateDetailSection(sectionId, (current) => ({
           ...current,
@@ -1583,7 +1583,7 @@ function App() {
                       }}
                     />
                   </label>
-                  <span className="field-tip">上传后会自动填入 OSS 图片地址，也可以继续手动修改 URL。</span>
+                  <span className="field-tip">上传后会自动填入本地图片地址，也可以继续手动修改 URL。</span>
                 </div>
 
                 <label>
@@ -2092,7 +2092,7 @@ function App() {
                       }}
                     />
                   </label>
-                  <span className="field-tip">品牌页封面图会上传到 OSS，并自动回填到当前字段。</span>
+                  <span className="field-tip">品牌页封面图会存到服务器本地，并自动回填到当前字段。</span>
                 </div>
 
                 <label>
@@ -2232,7 +2232,7 @@ function App() {
                         void handleUploadSiteImage(
                           files,
                           (url) => updateSiteContentForm('backgroundImage', url),
-                          'website/site/hero',
+                          'site/hero',
                           '首页背景图已上传并写入表单'
                         )
                       }}
@@ -2281,7 +2281,7 @@ function App() {
                                       ...current,
                                       image: url
                                     })),
-                                  'website/site/cards',
+                                  `site/cards`,
                                   `卡片 ${index + 1} 图片已上传`
                                 )
                               }}
