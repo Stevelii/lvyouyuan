@@ -3,9 +3,11 @@ import express from 'express'
 import multer from 'multer'
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypto'
 import { mkdirSync } from 'node:fs'
+import { rm } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { databaseName, execute, query, queryOne } from './db.js'
+import { getOssConfigSummary, ossEnabled, uploadLocalFileToOss } from './oss.js'
 
 const app = express()
 const PORT = Number(process.env.PORT ?? 8507)
@@ -62,6 +64,25 @@ const uploadImages = multer({
 app.use(cors())
 app.use(express.json({ limit: '2mb' }))
 app.use('/api/uploads', express.static(uploadsRoot))
+
+if (ossEnabled) {
+  const ossConfig = getOssConfigSummary()
+  console.log(`OSS 上传已启用：${ossConfig.bucket} @ ${ossConfig.endpoint}`)
+} else {
+  console.log('OSS 未启用，上传仍使用本地存储')
+}
+
+async function removeLocalUpload(filePath) {
+  if (!filePath) {
+    return
+  }
+
+  try {
+    await rm(filePath, { force: true })
+  } catch {
+    // Ignore cleanup failures for temporary upload files.
+  }
+}
 
 function createPasswordHash(password, salt = randomBytes(16).toString('hex')) {
   return {
@@ -1048,18 +1069,40 @@ app.post('/api/admin/uploads/images', requireAdmin, (request, response, next) =>
   })
 }, async (request, response) => {
   const files = Array.isArray(request.files) ? request.files : []
+  const uploadSubdir = sanitizeUploadSubdir(request.body.subdir)
 
   if (!files.length) {
     response.status(400).json({ message: '请先选择要上传的图片' })
     return
   }
 
-  const urls = files.map((file) => {
-    const relativePath = path.relative(uploadsRoot, file.path).split(path.sep).join('/')
-    return `/api/uploads/${relativePath}`
-  })
+  try {
+    const urls = []
 
-  response.status(201).json({ urls })
+    for (const file of files) {
+      if (ossEnabled) {
+        const uploaded = await uploadLocalFileToOss(file.path, {
+          subdir: uploadSubdir,
+          originalName: file.originalname,
+          contentType: file.mimetype
+        })
+        urls.push(uploaded.url)
+        await removeLocalUpload(file.path)
+        continue
+      }
+
+      const relativePath = path.relative(uploadsRoot, file.path).split(path.sep).join('/')
+      urls.push(`/api/uploads/${relativePath}`)
+    }
+
+    response.status(201).json({
+      urls,
+      storage: ossEnabled ? 'oss' : 'local'
+    })
+  } catch (error) {
+    await Promise.all(files.map((file) => removeLocalUpload(file.path)))
+    throw error
+  }
 })
 
 app.get('/api/admin/brands', requireAdmin, async (_request, response) => {

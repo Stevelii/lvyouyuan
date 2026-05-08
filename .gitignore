@@ -4,6 +4,7 @@ coverage
 .DS_Store
 .env
 .env.*
+!server/.env.example
 server/node_modules
 server/uploads
 server/data/*.bak

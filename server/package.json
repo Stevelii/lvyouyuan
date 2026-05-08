@@ -6,10 +6,13 @@
   "scripts": {
     "dev": "nodemon --watch src src/index.js",
     "setup-db": "node scripts/setup-db.js",
+    "test-oss": "node scripts/test-oss.js",
     "start": "node src/index.js"
   },
   "dependencies": {
+    "ali-oss": "^6.23.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "multer": "^2.1.1",
     "mysql2": "^3.22.2"
