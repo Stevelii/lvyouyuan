@@ -39,6 +39,10 @@ a {
   text-decoration: none;
 }
 
+button {
+  font: inherit;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -49,7 +53,7 @@ img {
 }
 
 .site-shell {
-  width: min(1280px, calc(100% - 32px));
+  width: min(1520px, calc(100% - 32px));
   margin: 0 auto;
   padding-bottom: 48px;
 }
@@ -85,6 +89,19 @@ img {
   letter-spacing: 0.08em;
 }
 
+.brand-mark__badge--image {
+  overflow: hidden;
+  padding: 4px;
+  background: #fffaf3;
+}
+
+.brand-mark__badge--image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .brand-mark strong,
 .hero-copy h1,
 .section-heading h2,
@@ -105,17 +122,20 @@ img {
 .site-nav {
   display: inline-flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 18px;
   font-family: "Avenir Next", "PingFang SC", sans-serif;
   color: var(--text-soft);
 }
 
-.site-nav a {
+.site-nav a,
+.nav-contact-button {
   position: relative;
   padding-bottom: 4px;
 }
 
-.site-nav a::after {
+.site-nav a::after,
+.nav-contact-button::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
@@ -126,15 +146,27 @@ img {
   transition: transform 220ms ease;
 }
 
-.site-nav a:hover::after {
+.site-nav a:hover::after,
+.nav-contact-button:hover::after {
   transform: scaleX(1);
+}
+
+.nav-contact-button,
+.contact-link {
+  border: 0;
+  cursor: pointer;
+}
+
+.nav-contact-button {
+  color: var(--accent-deep);
+  background: transparent;
 }
 
 .hero-section {
   position: relative;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 32px;
+  grid-template-columns: minmax(520px, 0.88fr) minmax(620px, 1.12fr);
+  gap: 48px;
   align-items: end;
   min-height: calc(100svh - 88px);
   padding: 48px 0 56px;
@@ -144,8 +176,8 @@ img {
 .hero-section::before {
   content: "";
   position: absolute;
-  inset: 40px -80px 0 auto;
-  width: 58%;
+  inset: 40px -24px 0 auto;
+  width: 56%;
   border-radius: 48px;
   background:
     linear-gradient(180deg, rgba(62, 83, 45, 0.72), rgba(33, 42, 28, 0.1)),
@@ -157,7 +189,7 @@ img {
 .hero-copy {
   position: relative;
   z-index: 1;
-  max-width: 620px;
+  max-width: 660px;
   padding: 48px 0;
   animation: riseIn 900ms ease both;
 }
@@ -225,6 +257,7 @@ img {
 .ghost-link {
   border: 1px solid var(--line);
   background: rgba(255, 250, 239, 0.58);
+  color: inherit;
 }
 
 .primary-link:hover,
@@ -234,7 +267,7 @@ img {
 
 .hero-visual {
   position: relative;
-  min-height: 540px;
+  min-height: 560px;
 }
 
 .floating-product,
@@ -296,6 +329,125 @@ img {
 .hero-placeholder {
   right: 24px;
   bottom: 20px;
+}
+
+.contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.contact-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  cursor: pointer;
+  background: rgba(26, 33, 22, 0.42);
+  backdrop-filter: blur(10px);
+}
+
+.contact-modal__card {
+  position: relative;
+  z-index: 1;
+  width: min(430px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 32px;
+  background: rgba(255, 251, 243, 0.96);
+  box-shadow: 0 34px 90px rgba(31, 42, 26, 0.28);
+  text-align: center;
+}
+
+.contact-modal__card h2,
+.contact-modal__card p {
+  margin: 0;
+}
+
+.contact-modal__card h2 {
+  font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
+  font-size: 1.9rem;
+  line-height: 1.12;
+}
+
+.contact-modal__card > p:not(.eyebrow) {
+  color: var(--text-soft);
+}
+
+.contact-modal__close {
+  position: absolute;
+  right: 18px;
+  top: 16px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent-deep);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.wecom-qr-frame {
+  width: min(250px, 78vw);
+  padding: 14px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(65, 82, 43, 0.1);
+}
+
+.wecom-qr-frame img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.contact-modal__hint {
+  color: rgba(31, 42, 26, 0.56);
+  font-family: "Avenir Next", "PingFang SC", sans-serif;
+  font-size: 0.82rem;
+}
+
+@media (min-width: 1500px) {
+  .site-shell {
+    width: min(1760px, calc(100% - 56px));
+  }
+
+  .site-header {
+    padding-inline: 8px;
+  }
+
+  .hero-section {
+    grid-template-columns: minmax(560px, 0.8fr) minmax(780px, 1.2fr);
+    gap: 64px;
+  }
+
+  .hero-section::before {
+    inset: 40px -8px 0 auto;
+    width: 57%;
+  }
+
+  .floating-product {
+    width: min(310px, 72%);
+  }
+
+  .floating-product--1 {
+    right: 74px;
+  }
+
+  .floating-product--2 {
+    left: 82px;
+  }
+
+  .floating-product--3 {
+    right: 156px;
+  }
 }
 
 .intro-strip,
@@ -416,6 +568,43 @@ img {
   padding: 22px;
 }
 
+.brand-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-card__logo {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border: 1px solid rgba(65, 82, 43, 0.12);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 14px 28px rgba(77, 68, 41, 0.1);
+}
+
+.brand-card__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.brand-card__logo--wide {
+  width: 108px;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.brand-card__logo--wide img {
+  padding: 10px;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9));
+}
+
 .brand-card__content h3 {
   margin: 0;
   font-size: 1.7rem;
@@ -427,7 +616,8 @@ img {
   margin: 0;
 }
 
-.brand-card__content > p:first-child {
+.brand-card__identity p {
+  margin: 0;
   color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1162,7 +1352,7 @@ img {
   }
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1240px) {
   .hero-section,
   .brand-grid,
   .advantage-list,

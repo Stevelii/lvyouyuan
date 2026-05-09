@@ -1,0 +1,17 @@
+{
+  "name": "绿优源官网",
+  "short_name": "绿优源",
+  "description": "优质农产品供应、企业福利礼盒、社区零售、生鲜粮油和地方风味选品。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ea",
+  "theme_color": "#4f6b37",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

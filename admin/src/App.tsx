@@ -183,32 +183,32 @@ function createEmptyAdminUserForm(): AdminUserForm {
 
 function createDefaultHomePageContent(): HomePageContent {
   return {
-    heroEyebrow: 'From Brand To Product',
-    heroTitle: '绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。',
+    heroEyebrow: '优质农产品供应与品牌化选品',
+    heroTitle: '绿优源，为企业福利、社区零售和家庭餐桌提供稳定的农产品组合。',
     heroDescription:
-      '我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。',
-    primaryActionLabel: '查看品牌',
-    secondaryActionLabel: '查看商品',
+      '围绕节令蔬果礼盒、粮油杂粮、生鲜禽蛋、茶饮特产和地方风味食品，我们把产地资源、品牌表达和渠道需求整理成更容易采购与复购的产品方案。',
+    primaryActionLabel: '了解品牌体系',
+    secondaryActionLabel: '查看产品选品',
     backgroundImage:
       'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
     cards: [
       {
         id: 'hero-card-1',
         image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80',
-        eyebrow: '品牌样张',
-        title: '品牌主视觉卡片'
+        eyebrow: '华篮彩',
+        title: '节令蔬果与企业福利礼盒'
       },
       {
         id: 'hero-card-2',
         image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80',
-        eyebrow: '商品表达',
-        title: '商品卖点组合展示'
+        eyebrow: '蔬雀',
+        title: '社区餐桌与高频生鲜零售'
       },
       {
         id: 'hero-card-3',
         image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=900&q=80',
-        eyebrow: '图文详情',
-        title: '详情内容封面卡片'
+        eyebrow: '星月优农',
+        title: '生态粮油与健康食材组合'
       }
     ]
   }

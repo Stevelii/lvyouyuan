@@ -5,56 +5,177 @@ import type { Brand, HomePageContent, Product, ProductDetailSection } from './ty
 
 const advantageItems = [
   {
-    title: '品牌矩阵 + 渠道整合',
-    description: '既能展示绿优源旗下品牌，也能管理合作品牌，让官网表达和实际经营结构保持一致。'
+    title: '自有品牌分层清晰',
+    description: '华篮彩面向节令礼赠，蔬雀服务社区餐桌，星月优农承接粮油杂粮，让不同渠道能快速找到合适的产品线。'
   },
   {
-    title: '图文详情可扩展',
-    description: '每个商品都能配置不同详情模块，让单品页更适合表达卖点、参数、图片与采购场景。'
+    title: '产地与商品资料完整',
+    description: '从产区、规格、包装、食用场景到采购建议，每个单品都尽量把渠道决策需要的信息讲清楚。'
   },
   {
-    title: '后台统一维护',
-    description: '品牌、商品、展示状态与详情页内容都可在后台集中维护，运营改动会直接同步到页面。'
+    title: '适配零售、团购与礼赠',
+    description: '围绕企业福利、社区团购、商超零售、电商组合和商务伴手礼，提供更容易落地的农产品组合方案。'
   }
 ]
 
 const processSteps = [
-  '品牌与产地资源整合',
-  '商品筛选与品控复核',
-  '详情页内容组织与网页展示',
-  '面向渠道与客户持续交付'
+  '产区与供应资源筛选',
+  '商品规格、包装和价格带梳理',
+  '按渠道场景组织组合方案',
+  '持续交付、复购和节令上新'
 ]
+
+const SITE_URL = 'https://lvyouyuan.com'
+const SITE_NAME = '绿优源'
+const DEFAULT_SITE_TITLE = '绿优源｜优质农产品供应与品牌展示官网'
+const DEFAULT_SITE_DESCRIPTION =
+  '绿优源聚焦优质农产品供应、企业福利礼盒、社区零售、粮油食材和特色风味产品，整合自有品牌与合作产区资源。'
+const DEFAULT_SHARE_IMAGE = `${SITE_URL}/qingyuan-maji-hero-ai.png`
+const WECOM_QR_IMAGE = '/wecom-qr.png'
+const LVYOUYUAN_LOGO_IMAGE = '/lvyouyuan-logo.jpg'
+const HUALANCAI_LOGO_IMAGE = '/hualancai-logo-web.png'
+
+function toAbsoluteUrl(value?: string) {
+  if (!value) {
+    return DEFAULT_SHARE_IMAGE
+  }
+
+  if (/^https?:\/\//i.test(value)) {
+    return value
+  }
+
+  return `${SITE_URL}${value.startsWith('/') ? value : `/${value}`}`
+}
+
+function upsertMeta(selector: string, attributes: Record<string, string>) {
+  let element = document.head.querySelector(selector) as HTMLMetaElement | HTMLLinkElement | null
+
+  if (!element) {
+    element = selector.startsWith('link')
+      ? document.createElement('link')
+      : document.createElement('meta')
+    document.head.appendChild(element)
+  }
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    element?.setAttribute(key, value)
+  })
+}
+
+function upsertJsonLd(id: string, value: object) {
+  let element = document.getElementById(id) as HTMLScriptElement | null
+
+  if (!element) {
+    element = document.createElement('script')
+    element.id = id
+    element.type = 'application/ld+json'
+    document.head.appendChild(element)
+  }
+
+  element.textContent = JSON.stringify(value)
+}
+
+function updateSeoMetadata({
+  title,
+  description,
+  path,
+  image,
+  type = 'website',
+  jsonLd
+}: {
+  title: string
+  description: string
+  path: string
+  image?: string
+  type?: 'website' | 'product'
+  jsonLd: object | object[]
+}) {
+  const canonicalUrl = `${SITE_URL}${path}`
+  const shareImage = toAbsoluteUrl(image)
+
+  document.title = title
+  upsertMeta('meta[name="description"]', { name: 'description', content: description })
+  upsertMeta('link[rel="canonical"]', { rel: 'canonical', href: canonicalUrl })
+  upsertMeta('meta[property="og:type"]', { property: 'og:type', content: type })
+  upsertMeta('meta[property="og:title"]', { property: 'og:title', content: title })
+  upsertMeta('meta[property="og:description"]', { property: 'og:description', content: description })
+  upsertMeta('meta[property="og:url"]', { property: 'og:url', content: canonicalUrl })
+  upsertMeta('meta[property="og:image"]', { property: 'og:image', content: shareImage })
+  upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: title })
+  upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: description })
+  upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: shareImage })
+  upsertJsonLd('site-structured-data', jsonLd)
+}
+
+function getBrandLogo(brand: Brand) {
+  if (brand.id === 'hualancai') {
+    return HUALANCAI_LOGO_IMAGE
+  }
+
+  if (brand.isOwned) {
+    return LVYOUYUAN_LOGO_IMAGE
+  }
+
+  return ''
+}
 
 function createDefaultHomePageContent(): HomePageContent {
   return {
-    heroEyebrow: 'From Brand To Product',
-    heroTitle: '绿优源，把品牌表达、商品介绍和图文详情页放在同一张官网里。',
+    heroEyebrow: '优质农产品供应与品牌化选品',
+    heroTitle: '绿优源，为企业福利、社区零售和家庭餐桌提供稳定的农产品组合。',
     heroDescription:
-      '我们既经营自有农产品品牌，也整合合作品牌资源。现在每个商品都能展开成图文并茂的详情页，更适合做招商、零售和采购展示。',
-    primaryActionLabel: '查看品牌',
-    secondaryActionLabel: '查看商品',
+      '围绕节令蔬果礼盒、粮油杂粮、生鲜禽蛋、茶饮特产和地方风味食品，我们把产地资源、品牌表达和渠道需求整理成更容易采购与复购的产品方案。',
+    primaryActionLabel: '了解品牌体系',
+    secondaryActionLabel: '查看产品选品',
     backgroundImage:
       'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
     cards: [
       {
         id: 'hero-card-1',
         image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=900&q=80',
-        eyebrow: '品牌样张',
-        title: '品牌主视觉卡片'
+        eyebrow: '华篮彩',
+        title: '节令蔬果与企业福利礼盒'
       },
       {
         id: 'hero-card-2',
         image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80',
-        eyebrow: '商品表达',
-        title: '商品卖点组合展示'
+        eyebrow: '蔬雀',
+        title: '社区餐桌与高频生鲜零售'
       },
       {
         id: 'hero-card-3',
         image: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=900&q=80',
-        eyebrow: '图文详情',
-        title: '详情内容封面卡片'
+        eyebrow: '星月优农',
+        title: '生态粮油与健康食材组合'
       }
     ]
+  }
+}
+
+function createPublicHomePageContent(content: HomePageContent): HomePageContent {
+  const defaultContent = createDefaultHomePageContent()
+  const hasSetupCopy =
+    content.heroTitle.includes('图文详情页') ||
+    content.heroTitle.includes('官网') ||
+    content.heroDescription.includes('招商') ||
+    content.cards.some((card) => card.title.includes('卡片') || card.eyebrow.includes('样张'))
+
+  if (!hasSetupCopy) {
+    return content
+  }
+
+  return {
+    ...content,
+    heroEyebrow: defaultContent.heroEyebrow,
+    heroTitle: defaultContent.heroTitle,
+    heroDescription: defaultContent.heroDescription,
+    primaryActionLabel: defaultContent.primaryActionLabel,
+    secondaryActionLabel: defaultContent.secondaryActionLabel,
+    cards: content.cards.map((card, index) => ({
+      ...card,
+      eyebrow: defaultContent.cards[index]?.eyebrow ?? card.eyebrow,
+      title: defaultContent.cards[index]?.title ?? card.title
+    }))
   }
 }
 
@@ -231,13 +352,16 @@ function renderDetailSection(section: ProductDetailSection) {
 
 type SiteHeaderProps = {
   onSectionNavigate: (event: MouseEvent<HTMLAnchorElement>, sectionId: string) => void
+  onContactOpen: () => void
 }
 
-function SiteHeader({ onSectionNavigate }: SiteHeaderProps) {
+function SiteHeader({ onSectionNavigate, onContactOpen }: SiteHeaderProps) {
   return (
     <header className="site-header">
       <a className="brand-mark" href="/" onClick={(event) => onSectionNavigate(event, 'top')}>
-        <span className="brand-mark__badge">LUY</span>
+        <span className="brand-mark__badge brand-mark__badge--image">
+          <img src={LVYOUYUAN_LOGO_IMAGE} alt="绿优源 Logo" />
+        </span>
         <span>
           <strong>绿优源</strong>
           <small>优质农产品供应与品牌展示</small>
@@ -260,6 +384,9 @@ function SiteHeader({ onSectionNavigate }: SiteHeaderProps) {
         <a href="/#contact" onClick={(event) => onSectionNavigate(event, 'contact')}>
           联系合作
         </a>
+        <button className="nav-contact-button" type="button" onClick={onContactOpen}>
+          企业微信
+        </button>
       </nav>
     </header>
   )
@@ -271,6 +398,7 @@ type HomePageProps = {
   products: Product[]
   loading: boolean
   error: string
+  onContactOpen: () => void
   onSectionNavigate: (event: MouseEvent<HTMLAnchorElement>, sectionId: string) => void
   onProductNavigate: (event: MouseEvent<HTMLAnchorElement>, productId: string) => void
 }
@@ -281,6 +409,7 @@ function HomePage({
   products,
   loading,
   error,
+  onContactOpen,
   onSectionNavigate,
   onProductNavigate
 }: HomePageProps) {
@@ -302,8 +431,8 @@ function HomePage({
       return {
         id: contentCard?.id ?? featuredProduct?.id ?? `hero-card-${index + 1}`,
         image: contentCard?.image || featuredProduct?.image || '',
-        eyebrow: contentCard?.eyebrow || featuredProduct?.brandName || '主视觉卡片',
-        title: contentCard?.title || featuredProduct?.name || '等待配置'
+        eyebrow: contentCard?.eyebrow || featuredProduct?.brandName || '绿优源选品',
+        title: contentCard?.title || featuredProduct?.name || '优质农产品组合'
       }
     })
   }, [content.cards, featuredProducts])
@@ -324,10 +453,13 @@ function HomePage({
             <a className="primary-link" href="/#brands" onClick={(event) => onSectionNavigate(event, 'brands')}>
               {content.primaryActionLabel}
             </a>
-            <a className="ghost-link" href="/#products" onClick={(event) => onSectionNavigate(event, 'products')}>
-              {content.secondaryActionLabel}
-            </a>
-          </div>
+          <a className="ghost-link" href="/#products" onClick={(event) => onSectionNavigate(event, 'products')}>
+            {content.secondaryActionLabel}
+          </a>
+          <button className="ghost-link contact-link" type="button" onClick={onContactOpen}>
+            企业微信咨询
+          </button>
+        </div>
         </div>
 
         <div className="hero-visual" aria-hidden="true">
@@ -343,8 +475,8 @@ function HomePage({
             ))
           ) : (
             <div className="hero-placeholder">
-              <strong>品牌化农产品展示</strong>
-              <span>自有品牌、合作品牌与详情页内容统一管理</span>
+              <strong>优质农产品组合</strong>
+              <span>企业福利、社区零售、家庭餐桌与特色风味选品</span>
             </div>
           )}
         </div>
@@ -352,7 +484,7 @@ function HomePage({
 
       <section className="intro-strip" id="about">
         <p>
-          绿优源专注于优质农产品与品牌资源整合，帮助企业同时完成品牌介绍、商品展示和合作转化，让官网更像真实业务的延伸。
+          绿优源围绕“好产地、好产品、好交付”组织农产品供应，服务企业福利、社区团购、商超零售、礼盒定制和日常家庭消费等场景。
         </p>
         <div className="intro-metrics">
           <span>
@@ -374,9 +506,9 @@ function HomePage({
         <div className="section-heading section-heading--spread">
           <div>
             <p className="eyebrow">品牌矩阵</p>
-            <h2>绿优源旗下品牌与官网展示品牌，可以根据业务结构灵活管理。</h2>
+            <h2>用不同品牌承接不同消费场景，让采购方更快理解产品定位。</h2>
           </div>
-          <p className="section-note">后台可录入合作品牌，但官网是否展示由品牌开关控制。</p>
+          <p className="section-note">华篮彩偏礼赠，蔬雀偏日常生鲜，星月优农偏粮油健康食材，合作品牌则补充地方风味与特色单品。</p>
         </div>
 
         {loading ? <p className="status-panel">正在加载品牌内容...</p> : null}
@@ -384,28 +516,41 @@ function HomePage({
 
         {!loading && !error ? (
           <div className="brand-grid">
-            {brands.map((brand) => (
-              <article className="brand-card" key={brand.id} style={{ '--brand-color': brand.color } as CSSProperties}>
-                <div className="brand-card__media">
-                  <img src={brand.coverImage} alt={brand.name} />
-                  <span>{brand.isOwned ? '绿优源旗下品牌' : '合作展示品牌'}</span>
-                </div>
-                <div className="brand-card__content">
-                  <p>{brand.englishName || 'Brand'}</p>
-                  <h3>{brand.name}</h3>
-                  <strong>{brand.slogan}</strong>
-                  <p>{brand.description}</p>
-                </div>
-              </article>
-            ))}
+            {brands.map((brand) => {
+              const brandLogo = getBrandLogo(brand)
+
+              return (
+                <article className="brand-card" key={brand.id} style={{ '--brand-color': brand.color } as CSSProperties}>
+                  <div className="brand-card__media">
+                    <img src={brand.coverImage} alt={brand.name} />
+                    <span>{brand.isOwned ? '绿优源旗下品牌' : '合作展示品牌'}</span>
+                  </div>
+                  <div className="brand-card__content">
+                    <div className="brand-card__identity">
+                      {brandLogo ? (
+                        <span className={`brand-card__logo ${brand.id === 'hualancai' ? 'brand-card__logo--wide' : ''}`}>
+                          <img src={brandLogo} alt={`${brand.name} Logo`} />
+                        </span>
+                      ) : null}
+                      <div>
+                        <p>{brand.englishName || 'Brand'}</p>
+                        <h3>{brand.name}</h3>
+                      </div>
+                    </div>
+                    <strong>{brand.slogan}</strong>
+                    <p>{brand.description}</p>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         ) : null}
       </section>
 
       <section className="content-section section-grid" id="service">
         <div className="section-heading">
-          <p className="eyebrow">公司优势</p>
-          <h2>从品牌层到详情页层，我们让官网内容更接近真实经营结构。</h2>
+          <p className="eyebrow">选品优势</p>
+          <h2>我们不只罗列商品，更关注它适合进入哪个渠道、以什么组合被采购。</h2>
         </div>
 
         <div className="advantage-list">
@@ -421,10 +566,10 @@ function HomePage({
       <section className="content-section" id="products">
         <div className="section-heading section-heading--spread">
           <div>
-            <p className="eyebrow">商品展示</p>
-            <h2>每个商品都可进入独立详情页，自有品牌与合作品牌都能做成完整图文介绍。</h2>
+            <p className="eyebrow">产品选品</p>
+            <h2>从富硒大米、时令蔬果礼盒，到清远麻鸡和红油笋尖，覆盖主粮、生鲜、礼盒与地方风味。</h2>
           </div>
-          <p className="section-note">商品、品牌和详情模块都来自后台，运营调整后官网刷新即可同步。</p>
+          <p className="section-note">每个商品都尽量呈现产地、规格、卖点与适用场景，方便采购、分销和礼赠方案评估。</p>
         </div>
 
         {loading ? <p className="status-panel">正在加载商品内容...</p> : null}
@@ -474,8 +619,8 @@ function HomePage({
 
       <section className="content-section process-layout">
         <div className="section-heading">
-          <p className="eyebrow">服务流程</p>
-          <h2>把“品牌定位、商品组织、详情内容配置、客户转化”连接成一条更稳定的农产品服务链。</h2>
+          <p className="eyebrow">合作方式</p>
+          <h2>从单品采购到节令组合，我们按渠道需求组织供应，而不是只给一份静态报价。</h2>
         </div>
 
         <div className="process-track">
@@ -490,8 +635,8 @@ function HomePage({
 
       <section className="content-section cta-block" id="contact">
         <p className="eyebrow">联系绿优源</p>
-        <h2>如果你需要一个能同时展示品牌矩阵、商品卡片和图文详情页的官网，我们已经把核心结构准备好了。</h2>
-        <p>可继续扩展为招商介绍页、询盘表单、品牌故事页和订单协同系统，让官网真正服务于日常经营。</p>
+        <h2>正在寻找企业福利礼盒、社区团购单品、粮油食材或地方风味产品？可以把需求发给绿优源。</h2>
+        <p>我们会根据预算、季节、配送范围和渠道类型，协助匹配更合适的产品组合与合作方式。</p>
         <div className="hero-actions">
           <a className="primary-link" href="mailto:contact@lvyouyuan.com">
             contact@lvyouyuan.com
@@ -499,9 +644,61 @@ function HomePage({
           <a className="ghost-link" href="tel:400-800-2026">
             400-800-2026
           </a>
+          <button className="ghost-link contact-link" type="button" onClick={onContactOpen}>
+            扫码联系企业微信
+          </button>
         </div>
       </section>
     </main>
+  )
+}
+
+type ContactModalProps = {
+  open: boolean
+  onClose: () => void
+}
+
+function ContactModal({ open, onClose }: ContactModalProps) {
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [open, onClose])
+
+  if (!open) {
+    return null
+  }
+
+  return (
+    <div className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+      <button className="contact-modal__backdrop" type="button" aria-label="关闭企业微信二维码弹窗" onClick={onClose} />
+      <section className="contact-modal__card">
+        <button className="contact-modal__close" type="button" aria-label="关闭" onClick={onClose}>
+          ×
+        </button>
+        <p className="eyebrow">企业微信咨询</p>
+        <h2 id="contact-modal-title">扫码添加绿优源企业微信</h2>
+        <p>欢迎咨询企业福利礼盒、社区团购、粮油食材、特色风味产品和渠道合作方案。</p>
+        <div className="wecom-qr-frame">
+          <img src={WECOM_QR_IMAGE} alt="绿优源企业微信二维码" />
+        </div>
+        <span className="contact-modal__hint">如二维码更新，替换网站 public 目录中的 wecom-qr.png 即可。</span>
+      </section>
+    </div>
   )
 }
 
@@ -672,7 +869,7 @@ function ProductDetailPage({
           ) : (
             <section className="detail-section detail-section--text">
               <h2>更多介绍</h2>
-              <p>这个商品的图文详情还在补充中，稍后会通过后台继续完善。</p>
+              <p>这个商品的更多产地、规格和采购信息正在补充中，欢迎联系绿优源获取最新资料。</p>
             </section>
           )}
         </div>
@@ -750,6 +947,7 @@ function App() {
   const [products, setProducts] = useState<Product[]>([])
   const [siteContent, setSiteContent] = useState<HomePageContent>(createDefaultHomePageContent())
   const [pathname, setPathname] = useState(getPathname)
+  const [contactModalOpen, setContactModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -777,7 +975,7 @@ function App() {
         if (active) {
           setProducts(nextProducts)
           setBrands(nextBrands)
-          setSiteContent(nextSiteContent)
+          setSiteContent(createPublicHomePageContent(nextSiteContent))
           setError('')
         }
       } catch (loadError) {
@@ -804,6 +1002,138 @@ function App() {
     [detailProductId, products]
   )
 
+  useEffect(() => {
+    if (detailProductId && !detailProduct) {
+      updateSeoMetadata({
+        title: `商品详情｜${SITE_NAME}`,
+        description: '这个商品暂时没有找到，可能还未上架，或者详情页地址已经变更。',
+        path: `/products/${detailProductId}`,
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: `商品详情｜${SITE_NAME}`,
+          description: '商品详情页',
+          url: `${SITE_URL}/products/${detailProductId}`,
+          isPartOf: {
+            '@type': 'WebSite',
+            name: SITE_NAME,
+            url: SITE_URL
+          }
+        }
+      })
+      return
+    }
+
+    if (detailProduct) {
+      const productTitle = `${detailProduct.name}｜${detailProduct.brandName}｜${SITE_NAME}`
+      const productDescription = `${detailProduct.description} 产地：${detailProduct.origin}，分类：${detailProduct.category}，参考信息：${detailProduct.priceLabel}。`
+      const productPath = `/products/${detailProduct.id}`
+
+      updateSeoMetadata({
+        title: productTitle,
+        description: productDescription,
+        path: productPath,
+        image: detailProduct.image,
+        type: 'product',
+        jsonLd: [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: detailProduct.name,
+            description: detailProduct.description,
+            image: [toAbsoluteUrl(detailProduct.image)],
+            brand: {
+              '@type': 'Brand',
+              name: detailProduct.brandName
+            },
+            category: detailProduct.category,
+            sku: detailProduct.id,
+            areaServed: '中国',
+            offers: {
+              '@type': 'Offer',
+              availability: detailProduct.isPublished ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              priceCurrency: 'CNY',
+              url: `${SITE_URL}${productPath}`
+            }
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: '首页',
+                item: SITE_URL
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: '商品展示',
+                item: `${SITE_URL}/#products`
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: detailProduct.name,
+                item: `${SITE_URL}${productPath}`
+              }
+            ]
+          }
+        ]
+      })
+      return
+    }
+
+    updateSeoMetadata({
+      title: DEFAULT_SITE_TITLE,
+      description: DEFAULT_SITE_DESCRIPTION,
+      path: '/',
+      image: siteContent.backgroundImage,
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: SITE_NAME,
+          url: SITE_URL,
+          logo: `${SITE_URL}/favicon.svg`,
+          description: DEFAULT_SITE_DESCRIPTION,
+          contactPoint: {
+            '@type': 'ContactPoint',
+            telephone: '400-800-2026',
+            contactType: 'customer service',
+            availableLanguage: ['zh-CN']
+          },
+          sameAs: []
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: SITE_NAME,
+          url: SITE_URL,
+          inLanguage: 'zh-CN',
+          description: DEFAULT_SITE_DESCRIPTION,
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: `${SITE_URL}/#products?q={search_term_string}`,
+            'query-input': 'required name=search_term_string'
+          }
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: '绿优源官网商品展示',
+          itemListElement: products.slice(0, 12).map((product, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            url: `${SITE_URL}/products/${product.id}`,
+            name: product.name
+          }))
+        }
+      ]
+    })
+  }, [detailProduct, detailProductId, products, siteContent.backgroundImage])
+
   function navigate(path: string) {
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path)
@@ -828,7 +1158,7 @@ function App() {
 
   return (
     <div className="site-shell">
-      <SiteHeader onSectionNavigate={handleSectionNavigate} />
+      <SiteHeader onContactOpen={() => setContactModalOpen(true)} onSectionNavigate={handleSectionNavigate} />
       {detailProductId ? (
         <ProductDetailPage
           loading={loading}
@@ -843,11 +1173,13 @@ function App() {
           content={siteContent}
           error={error}
           loading={loading}
+          onContactOpen={() => setContactModalOpen(true)}
           onProductNavigate={handleProductNavigate}
           onSectionNavigate={handleSectionNavigate}
           products={products}
         />
       )}
+      <ContactModal open={contactModalOpen} onClose={() => setContactModalOpen(false)} />
     </div>
   )
 }
