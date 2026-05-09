@@ -129,6 +129,13 @@ function createDefaultHomePageContent(): HomePageContent {
     secondaryActionLabel: '查看产品选品',
     backgroundImage:
       'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    contactEyebrow: '联系绿优源',
+    contactTitle: '正在寻找企业福利礼盒、社区团购单品、粮油食材或地方风味产品？',
+    contactDescription: '我们会根据预算、季节、配送范围和渠道类型，协助匹配更合适的产品组合与合作方式。',
+    contactEmail: 'contact@lvyouyuan.com',
+    contactPhone: '400-800-2026',
+    contactWechatLabel: '扫码联系企业微信',
+    contactQrImage: WECOM_QR_IMAGE,
     cards: [
       {
         id: 'hero-card-1',
@@ -548,9 +555,12 @@ function HomePage({
       </section>
 
       <section className="content-section section-grid" id="service">
-        <div className="section-heading">
-          <p className="eyebrow">选品优势</p>
-          <h2>我们不只罗列商品，更关注它适合进入哪个渠道、以什么组合被采购。</h2>
+        <div className="section-heading section-heading--spread">
+          <div>
+            <p className="eyebrow">选品优势</p>
+            <h2>先判断渠道，再组合产品。</h2>
+          </div>
+          <p className="section-note">面向企业福利、社区团购、商超零售和商务伴手礼，绿优源会从品牌定位、产地资料、包装规格和交付场景一起判断产品是否适合上架或组合销售。</p>
         </div>
 
         <div className="advantage-list">
@@ -564,12 +574,21 @@ function HomePage({
       </section>
 
       <section className="content-section" id="products">
-        <div className="section-heading section-heading--spread">
+        <div className="section-heading section-heading--spread product-heading">
           <div>
             <p className="eyebrow">产品选品</p>
-            <h2>从富硒大米、时令蔬果礼盒，到清远麻鸡和红油笋尖，覆盖主粮、生鲜、礼盒与地方风味。</h2>
+            <h2>按采购场景整理产品，避免商品简单堆叠。</h2>
           </div>
-          <p className="section-note">每个商品都尽量呈现产地、规格、卖点与适用场景，方便采购、分销和礼赠方案评估。</p>
+          <div className="section-heading__aside">
+            <p className="section-note">从富硒大米、时令蔬果礼盒，到清远麻鸡和红油笋尖，每个商品都尽量呈现产地、规格、卖点与适用场景，方便采购、分销和礼赠方案评估。</p>
+            <div className="product-heading__tags" aria-label="产品适用场景">
+              <span>企业福利</span>
+              <span>社区团购</span>
+              <span>商超零售</span>
+              <span>节令礼盒</span>
+              <span>地方风味</span>
+            </div>
+          </div>
         </div>
 
         {loading ? <p className="status-panel">正在加载商品内容...</p> : null}
@@ -618,9 +637,12 @@ function HomePage({
       </section>
 
       <section className="content-section process-layout">
-        <div className="section-heading">
-          <p className="eyebrow">合作方式</p>
-          <h2>从单品采购到节令组合，我们按渠道需求组织供应，而不是只给一份静态报价。</h2>
+        <div className="section-heading section-heading--spread">
+          <div>
+            <p className="eyebrow">合作方式</p>
+            <h2>从单品采购到节令组合，我们按渠道需求组织供应。</h2>
+          </div>
+          <p className="section-note">按照预算、交付周期、包装规格和销售渠道梳理合作路径，让采购方获得可落地的产品组合，而不是只拿到一份静态报价。</p>
         </div>
 
         <div className="process-track">
@@ -634,19 +656,25 @@ function HomePage({
       </section>
 
       <section className="content-section cta-block" id="contact">
-        <p className="eyebrow">联系绿优源</p>
-        <h2>正在寻找企业福利礼盒、社区团购单品、粮油食材或地方风味产品？可以把需求发给绿优源。</h2>
-        <p>我们会根据预算、季节、配送范围和渠道类型，协助匹配更合适的产品组合与合作方式。</p>
-        <div className="hero-actions">
-          <a className="primary-link" href="mailto:contact@lvyouyuan.com">
-            contact@lvyouyuan.com
-          </a>
-          <a className="ghost-link" href="tel:400-800-2026">
-            400-800-2026
-          </a>
-          <button className="ghost-link contact-link" type="button" onClick={onContactOpen}>
-            扫码联系企业微信
-          </button>
+        <div className="section-heading section-heading--spread">
+          <div>
+            <p className="eyebrow">{content.contactEyebrow}</p>
+            <h2>{content.contactTitle}</h2>
+          </div>
+          <div className="section-heading__aside">
+            <p className="section-note">{content.contactDescription}</p>
+            <div className="hero-actions">
+              <a className="primary-link" href={`mailto:${content.contactEmail}`}>
+                {content.contactEmail}
+              </a>
+              <a className="ghost-link" href={`tel:${content.contactPhone.replace(/\s/g, '')}`}>
+                {content.contactPhone}
+              </a>
+              <button className="ghost-link contact-link" type="button" onClick={onContactOpen}>
+                {content.contactWechatLabel}
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -656,9 +684,10 @@ function HomePage({
 type ContactModalProps = {
   open: boolean
   onClose: () => void
+  content: HomePageContent
 }
 
-function ContactModal({ open, onClose }: ContactModalProps) {
+function ContactModal({ open, onClose, content }: ContactModalProps) {
   useEffect(() => {
     if (!open) {
       return
@@ -691,12 +720,12 @@ function ContactModal({ open, onClose }: ContactModalProps) {
           ×
         </button>
         <p className="eyebrow">企业微信咨询</p>
-        <h2 id="contact-modal-title">扫码添加绿优源企业微信</h2>
-        <p>欢迎咨询企业福利礼盒、社区团购、粮油食材、特色风味产品和渠道合作方案。</p>
+        <h2 id="contact-modal-title">{content.contactWechatLabel}</h2>
+        <p>{content.contactDescription}</p>
         <div className="wecom-qr-frame">
-          <img src={WECOM_QR_IMAGE} alt="绿优源企业微信二维码" />
+          <img src={content.contactQrImage} alt="绿优源企业微信二维码" />
         </div>
-        <span className="contact-modal__hint">如二维码更新，替换网站 public 目录中的 wecom-qr.png 即可。</span>
+        <span className="contact-modal__hint">二维码可在后台“官网首页配置区”更新。</span>
       </section>
     </div>
   )
@@ -1100,7 +1129,8 @@ function App() {
           description: DEFAULT_SITE_DESCRIPTION,
           contactPoint: {
             '@type': 'ContactPoint',
-            telephone: '400-800-2026',
+            telephone: siteContent.contactPhone,
+            email: siteContent.contactEmail,
             contactType: 'customer service',
             availableLanguage: ['zh-CN']
           },
@@ -1132,7 +1162,7 @@ function App() {
         }
       ]
     })
-  }, [detailProduct, detailProductId, products, siteContent.backgroundImage])
+  }, [detailProduct, detailProductId, products, siteContent])
 
   function navigate(path: string) {
     if (window.location.pathname !== path) {
@@ -1179,7 +1209,7 @@ function App() {
           products={products}
         />
       )}
-      <ContactModal open={contactModalOpen} onClose={() => setContactModalOpen(false)} />
+      <ContactModal content={siteContent} open={contactModalOpen} onClose={() => setContactModalOpen(false)} />
     </div>
   )
 }

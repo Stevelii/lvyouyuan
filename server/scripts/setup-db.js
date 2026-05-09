@@ -32,6 +32,13 @@ function createDefaultHomePageContent() {
     secondaryActionLabel: '查看产品选品',
     backgroundImage:
       'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    contactEyebrow: '联系绿优源',
+    contactTitle: '正在寻找企业福利礼盒、社区团购单品、粮油食材或地方风味产品？',
+    contactDescription: '我们会根据预算、季节、配送范围和渠道类型，协助匹配更合适的产品组合与合作方式。',
+    contactEmail: 'contact@lvyouyuan.com',
+    contactPhone: '400-800-2026',
+    contactWechatLabel: '扫码联系企业微信',
+    contactQrImage: '/wecom-qr.png',
     cards: [
       {
         id: 'hero-card-1',

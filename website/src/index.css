@@ -12,6 +12,10 @@
   font-weight: 400;
   --accent: #7d8f4f;
   --accent-deep: #41522b;
+  --fresh-green: #82c94f;
+  --fresh-green-bright: #a6df63;
+  --fresh-green-deep: #3f7a2d;
+  --fresh-gradient: linear-gradient(135deg, #a6df63 0%, #6fbb45 48%, #3f7a2d 100%);
   --earth: #b9783b;
   --surface: rgba(255, 250, 239, 0.76);
   --surface-strong: rgba(255, 251, 243, 0.92);
@@ -83,8 +87,8 @@ img {
   height: 48px;
   border-radius: 50%;
   color: #f7f4ed;
-  background: linear-gradient(135deg, #7d8f4f, #41522b);
-  box-shadow: 0 16px 30px rgba(65, 82, 43, 0.2);
+  background: var(--fresh-gradient);
+  box-shadow: 0 16px 30px rgba(96, 160, 62, 0.24);
   font-family: "Avenir Next", "PingFang SC", sans-serif;
   letter-spacing: 0.08em;
 }
@@ -250,8 +254,8 @@ img {
 
 .primary-link {
   color: #faf6ee;
-  background: linear-gradient(135deg, #7d8f4f, #41522b);
-  box-shadow: 0 18px 36px rgba(65, 82, 43, 0.18);
+  background: var(--fresh-gradient);
+  box-shadow: 0 18px 36px rgba(96, 160, 62, 0.24);
 }
 
 .ghost-link {
@@ -500,10 +504,15 @@ img {
 }
 
 .section-heading--spread {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr);
+  align-items: start;
   gap: 24px;
   max-width: none;
+}
+
+.section-heading--spread > div:first-child {
+  max-width: 920px;
 }
 
 .section-heading h2,
@@ -520,6 +529,39 @@ img {
 
 .section-note {
   max-width: 28rem;
+  margin: 0;
+  padding-top: 32px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+#products .section-note {
+  max-width: 32rem;
+}
+
+.section-heading__aside {
+  display: grid;
+  gap: 16px;
+}
+
+.product-heading__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.product-heading__tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgba(65, 82, 43, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 251, 243, 0.62);
+  color: var(--accent-deep);
+  font-family: "Avenir Next", "PingFang SC", sans-serif;
+  font-size: 0.92rem;
 }
 
 .advantage-list {
@@ -642,7 +684,7 @@ img {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
-  margin-top: 28px;
+  margin-top: 34px;
 }
 
 .product-card {
@@ -715,7 +757,8 @@ img {
   margin-top: 6px;
   border-radius: 999px;
   color: #faf6ee;
-  background: linear-gradient(135deg, #7d8f4f, #41522b);
+  background: var(--fresh-gradient);
+  box-shadow: 0 14px 28px rgba(96, 160, 62, 0.18);
 }
 
 .product-brand {
@@ -786,20 +829,23 @@ img {
 }
 
 .cta-block {
-  text-align: center;
   background:
-    linear-gradient(135deg, rgba(65, 82, 43, 0.94), rgba(86, 116, 58, 0.88)),
-    radial-gradient(circle at top, rgba(248, 236, 215, 0.2), transparent 45%);
+    linear-gradient(135deg, rgba(60, 126, 42, 0.96), rgba(104, 172, 67, 0.9)),
+    radial-gradient(circle at top, rgba(207, 240, 148, 0.28), transparent 46%);
   color: #f9f2e9;
 }
 
+.cta-block .section-heading--spread {
+  align-items: center;
+}
+
 .cta-block .eyebrow,
-.cta-block p {
+.cta-block .section-note {
   color: rgba(249, 242, 233, 0.78);
 }
 
 .cta-block .hero-actions {
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .cta-block .ghost-link {
@@ -1185,8 +1231,8 @@ img {
 
 .detail-section--quote {
   background:
-    linear-gradient(135deg, rgba(65, 82, 43, 0.94), rgba(86, 116, 58, 0.88)),
-    radial-gradient(circle at top, rgba(248, 236, 215, 0.2), transparent 45%);
+    linear-gradient(135deg, rgba(60, 126, 42, 0.96), rgba(104, 172, 67, 0.9)),
+    radial-gradient(circle at top, rgba(207, 240, 148, 0.28), transparent 46%);
   color: #f9f2e9;
 }
 
@@ -1252,8 +1298,8 @@ img {
 
 .detail-side-quote {
   background:
-    linear-gradient(135deg, rgba(65, 82, 43, 0.94), rgba(86, 116, 58, 0.88)),
-    radial-gradient(circle at top, rgba(248, 236, 215, 0.2), transparent 45%);
+    linear-gradient(135deg, rgba(60, 126, 42, 0.96), rgba(104, 172, 67, 0.9)),
+    radial-gradient(circle at top, rgba(207, 240, 148, 0.28), transparent 46%);
   color: #f9f2e9;
 }
 
@@ -1384,6 +1430,10 @@ img {
     display: grid;
   }
 
+  .section-heading--spread {
+    gap: 10px;
+  }
+
   .detail-content__rail {
     position: static;
     top: auto;
@@ -1423,6 +1473,10 @@ img {
   .hero-section {
     min-height: auto;
     padding-top: 24px;
+  }
+
+  #products .section-heading h2 {
+    font-size: clamp(1.8rem, 9vw, 2.6rem);
   }
 
   .hero-section::before {

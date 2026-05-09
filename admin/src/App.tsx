@@ -191,6 +191,13 @@ function createDefaultHomePageContent(): HomePageContent {
     secondaryActionLabel: '查看产品选品',
     backgroundImage:
       'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80',
+    contactEyebrow: '联系绿优源',
+    contactTitle: '正在寻找企业福利礼盒、社区团购单品、粮油食材或地方风味产品？',
+    contactDescription: '我们会根据预算、季节、配送范围和渠道类型，协助匹配更合适的产品组合与合作方式。',
+    contactEmail: 'contact@lvyouyuan.com',
+    contactPhone: '400-800-2026',
+    contactWechatLabel: '扫码联系企业微信',
+    contactQrImage: '/wecom-qr.png',
     cards: [
       {
         id: 'hero-card-1',
@@ -2240,6 +2247,96 @@ function App() {
                   </label>
                   <span className="field-tip">这张图会作为首页首屏右侧大面积背景图。</span>
                 </div>
+
+                <section className="detail-editor">
+                  <div className="detail-editor__header">
+                    <div>
+                      <p className="sidebar-label">联系合作区</p>
+                      <h3>官网底部联系信息</h3>
+                    </div>
+                  </div>
+                  <div className="field-grid">
+                    <label>
+                      联系区眉题
+                      <input
+                        required
+                        value={siteContentForm.contactEyebrow}
+                        onChange={(event) => updateSiteContentForm('contactEyebrow', event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      联系邮箱
+                      <input
+                        required
+                        type="email"
+                        value={siteContentForm.contactEmail}
+                        onChange={(event) => updateSiteContentForm('contactEmail', event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      联系电话
+                      <input
+                        required
+                        value={siteContentForm.contactPhone}
+                        onChange={(event) => updateSiteContentForm('contactPhone', event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      企业微信按钮文字
+                      <input
+                        required
+                        value={siteContentForm.contactWechatLabel}
+                        onChange={(event) => updateSiteContentForm('contactWechatLabel', event.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <label>
+                    联系区标题
+                    <textarea
+                      required
+                      rows={3}
+                      value={siteContentForm.contactTitle}
+                      onChange={(event) => updateSiteContentForm('contactTitle', event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    联系区说明
+                    <textarea
+                      required
+                      rows={3}
+                      value={siteContentForm.contactDescription}
+                      onChange={(event) => updateSiteContentForm('contactDescription', event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    企业微信二维码 URL
+                    <input
+                      required
+                      value={siteContentForm.contactQrImage}
+                      onChange={(event) => updateSiteContentForm('contactQrImage', event.target.value)}
+                    />
+                  </label>
+                  <div className="upload-actions">
+                    <label className={`button-secondary upload-button${saving ? ' upload-button--disabled' : ''}`}>
+                      上传二维码
+                      <input
+                        accept="image/*"
+                        disabled={saving}
+                        type="file"
+                        onChange={(event) => {
+                          const files = getSelectedFiles(event)
+                          void handleUploadSiteImage(
+                            files,
+                            (url) => updateSiteContentForm('contactQrImage', url),
+                            'site/contact',
+                            '企业微信二维码已上传并写入表单'
+                          )
+                        }}
+                      />
+                    </label>
+                    <span className="field-tip">这里会用于官网“企业微信”弹窗。</span>
+                  </div>
+                </section>
 
                 <section className="detail-editor">
                   <div className="detail-editor__header">

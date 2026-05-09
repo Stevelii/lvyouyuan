@@ -66,6 +66,13 @@ export type HomePageContent = {
   primaryActionLabel: string
   secondaryActionLabel: string
   backgroundImage: string
+  contactEyebrow: string
+  contactTitle: string
+  contactDescription: string
+  contactEmail: string
+  contactPhone: string
+  contactWechatLabel: string
+  contactQrImage: string
   cards: HomeHeroCard[]
 }
 
